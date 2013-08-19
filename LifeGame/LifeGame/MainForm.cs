@@ -95,6 +95,9 @@ namespace LifeGame
 
                 nud_GridWidth.Value = (decimal)grid.Width;
                 nud_GridHeight.Value = (decimal)grid.Height;
+
+                RefreshUI();
+                DrawGrid();
             }
             catch (Exception x)
             {
@@ -123,7 +126,7 @@ namespace LifeGame
 
         private void grid_UpdateFinished(object sender, EventArgs e)
         {
-            RefreshLivingCellsLabel();
+            RefreshUI();
         }
 
         private void Render()
@@ -156,9 +159,20 @@ namespace LifeGame
             updateThread.Abort();
         }
 
+        private void RefreshUI()
+        {
+            RefreshLivingCellsLabel();
+            RefreshIterationLabel();
+        }
+
         private void RefreshLivingCellsLabel()
         {
             this.Invoke(new Action(() => lbl_NumberOfLivingCells.Text = grid.LivingCells.ToString()));
+        }
+
+        private void RefreshIterationLabel()
+        {
+            this.Invoke(new Action(() => lbl_CurrentIteration.Text = grid.Iteration.ToString()));
         }
 
         private void hsc_HorizontalScroller_Scroll(object sender, ScrollEventArgs e)

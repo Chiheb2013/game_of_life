@@ -43,6 +43,8 @@
             this.gb_SaveOptions = new System.Windows.Forms.GroupBox();
             this.bt_LoadFrom = new System.Windows.Forms.Button();
             this.bt_SaveTo = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lbl_CurrentIteration = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridHeight)).BeginInit();
@@ -65,6 +67,8 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.lbl_CurrentIteration);
+            this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.nud_GridHeight);
             this.panel1.Controls.Add(this.nud_GridWidth);
             this.panel1.Controls.Add(this.label1);
@@ -79,6 +83,11 @@
             // 
             // nud_GridHeight
             // 
+            this.nud_GridHeight.Increment = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
             this.nud_GridHeight.Location = new System.Drawing.Point(111, 26);
             this.nud_GridHeight.Maximum = new decimal(new int[] {
             255,
@@ -86,7 +95,7 @@
             0,
             0});
             this.nud_GridHeight.Minimum = new decimal(new int[] {
-            10,
+            8,
             0,
             0,
             0});
@@ -94,13 +103,18 @@
             this.nud_GridHeight.Size = new System.Drawing.Size(45, 20);
             this.nud_GridHeight.TabIndex = 8;
             this.nud_GridHeight.Value = new decimal(new int[] {
-            10,
+            8,
             0,
             0,
             0});
             // 
             // nud_GridWidth
             // 
+            this.nud_GridWidth.Increment = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
             this.nud_GridWidth.Location = new System.Drawing.Point(60, 26);
             this.nud_GridWidth.Maximum = new decimal(new int[] {
             255,
@@ -108,7 +122,7 @@
             0,
             0});
             this.nud_GridWidth.Minimum = new decimal(new int[] {
-            10,
+            8,
             0,
             0,
             0});
@@ -116,7 +130,7 @@
             this.nud_GridWidth.Size = new System.Drawing.Size(45, 20);
             this.nud_GridWidth.TabIndex = 7;
             this.nud_GridWidth.Value = new decimal(new int[] {
-            10,
+            8,
             0,
             0,
             0});
@@ -228,6 +242,23 @@
             this.bt_SaveTo.UseVisualStyleBackColor = true;
             this.bt_SaveTo.Click += new System.EventHandler(this.bt_SaveTo_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(174, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Iteration :";
+            // 
+            // lbl_CurrentIteration
+            // 
+            this.lbl_CurrentIteration.AutoSize = true;
+            this.lbl_CurrentIteration.Location = new System.Drawing.Point(231, 3);
+            this.lbl_CurrentIteration.Name = "lbl_CurrentIteration";
+            this.lbl_CurrentIteration.Size = new System.Drawing.Size(0, 13);
+            this.lbl_CurrentIteration.TabIndex = 10;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -269,6 +300,8 @@
         private System.Windows.Forms.GroupBox gb_SaveOptions;
         private System.Windows.Forms.Button bt_LoadFrom;
         private System.Windows.Forms.Button bt_SaveTo;
+        private System.Windows.Forms.Label lbl_CurrentIteration;
+        private System.Windows.Forms.Label label3;
     }
 }
 

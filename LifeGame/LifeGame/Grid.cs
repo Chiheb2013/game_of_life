@@ -18,6 +18,8 @@ namespace LifeGame
         public event EventHandler UpdateFinished;
         Random rand = new Random();
 
+        int iteration;
+
         Cell[] copy;
         Cell[] cells;
 
@@ -25,6 +27,7 @@ namespace LifeGame
 
         public int Width { get { return size.X; } }
         public int Height { get { return size.Y; } }
+        public int Iteration { get { return iteration; } }
         public int LivingCells
         {
             get
@@ -57,6 +60,15 @@ namespace LifeGame
             this.copy = new Cell[size.X * size.Y];
         }
 
+        public Grid(Point size, Cell[] cells, int iteration)
+        {
+            this.size = size;
+            this.cells = cells;
+            this.iteration = iteration;
+
+            this.copy = new Cell[size.X * size.Y];
+        }
+
         private void CreateCells()
         {
             CreateEmptyGrids();
@@ -82,6 +94,8 @@ namespace LifeGame
 
         public void Update()
         {
+            iteration++;
+
             CreateGridCopy();
             DetermineNextStateForCells();
             RaiseUpdateFinishedEvent();
