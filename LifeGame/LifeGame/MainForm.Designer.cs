@@ -90,7 +90,7 @@
             0});
             this.nud_GridHeight.Location = new System.Drawing.Point(111, 26);
             this.nud_GridHeight.Maximum = new decimal(new int[] {
-            255,
+            248,
             0,
             0,
             0});
@@ -117,7 +117,7 @@
             0});
             this.nud_GridWidth.Location = new System.Drawing.Point(60, 26);
             this.nud_GridWidth.Maximum = new decimal(new int[] {
-            255,
+            248,
             0,
             0,
             0});
