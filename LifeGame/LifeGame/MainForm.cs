@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Threading;
-
-using Mappy;
+using System.Windows.Forms;
 
 namespace LifeGame
 {
@@ -30,26 +22,43 @@ namespace LifeGame
         {
             InitializeComponent();
 
-            CreateGrid();
+            InitializeLifeGame(hasBitmap:false);
+        }
+
+        private void bt_NewGrid_Click(object sender, EventArgs e)
+        {
+            bt_StartStop.Text = "Start";
+            graphics.Clear(Color.White);
+
+            CloseUpdateThread();
+            InitializeLifeGame();
+        }
+
+        private void InitializeLifeGame(bool hasBitmap = true, bool hasGrid = false)
+        {
+            working = false;
+            view = new Rectangle(0, 0, pb_Ozone.Width, pb_Ozone.Height);
+
+            if (!hasGrid)
+                CreateGrid();
+
+            if (!hasBitmap)
+                CreateBitmap();
+
+            SetScrollBarsMaximums();
         }
 
         private void CreateGrid()
         {
-            working = false;
-            Vector2D gridSize = new Vector2D((float)nud_GridWidth.Value, (float)nud_GridHeight.Value);
+            Point gridSize = new Point((int)nud_GridWidth.Value, (int)nud_GridHeight.Value);
             grid = new Grid(gridSize);
-
-            CreateBitmap();
-            SetScrollBarsMaximums();
         }
 
         private void CreateBitmap()
         {
             bmp = new Bitmap(pb_Ozone.Width, pb_Ozone.Height);
             graphics = Graphics.FromImage(bmp);
-
-            view = new Rectangle(0, 0, pb_Ozone.Width, pb_Ozone.Height);
-
+            
             pb_Ozone.Image = bmp;
         }
 
@@ -60,6 +69,96 @@ namespace LifeGame
 
             hsc_HorizontalScroller.Maximum = width;
             vsc_VerticalScroller.Maximum = height;
+        }
+
+        private void bt_SaveTo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string to = DialogHelper.GetSavePath("Save grid...", "Grid|*.xgrid");
+                GridStorageHelper.SaveGrid(grid, to);
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show("An error occured : " + x.Message);
+            }
+        }
+
+        private void bt_LoadFrom_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string from = DialogHelper.GetLoadPath("Load grid...", "Grid|*.xgrid");
+                grid = GridStorageHelper.LoadGrid(from);
+
+                InitializeLifeGame(hasGrid: true);
+
+                nud_GridWidth.Value = (decimal)grid.Width;
+                nud_GridHeight.Value = (decimal)grid.Height;
+            }
+            catch (Exception x)
+            {
+                MessageBox.Show("An error occured : " + x.Message);
+            }
+        }
+
+        private void bt_StartStop_Click(object sender, EventArgs e)
+        {
+            if (!working)
+                CreateWorkerThreadAndSetUI();
+            else
+                StopWorkerThreadAndSetUI();
+        }
+
+        private void UpdateGrid()
+        {
+            grid.UpdateFinished += grid_UpdateFinished;
+
+            while (true)
+            {
+                grid.Update();
+                Render();
+            }
+        }
+
+        private void grid_UpdateFinished(object sender, EventArgs e)
+        {
+            RefreshLivingCellsLabel();
+        }
+
+        private void Render()
+        {
+            this.Invoke(new Action(() => DrawGrid()));
+        }
+
+        private void DrawGrid()
+        {
+            graphics.Clear(Color.White);
+
+            grid.Render(graphics);
+            pb_Ozone.Refresh();
+        }
+
+        private void CreateWorkerThreadAndSetUI()
+        {
+            working = true;
+            bt_StartStop.Text = "Stop";
+
+            updateThread = new Thread(new ThreadStart(UpdateGrid));
+            updateThread.Start();
+        }
+
+        private void StopWorkerThreadAndSetUI()
+        {
+            working = false;
+            bt_StartStop.Text = "Start";
+
+            updateThread.Abort();
+        }
+
+        private void RefreshLivingCellsLabel()
+        {
+            this.Invoke(new Action(() => lbl_NumberOfLivingCells.Text = grid.LivingCells.ToString()));
         }
 
         private void hsc_HorizontalScroller_Scroll(object sender, ScrollEventArgs e)
@@ -75,62 +174,11 @@ namespace LifeGame
         private void vsc_VerticalScroller_Scroll(object sender, ScrollEventArgs e)
         {
             view.Y = e.NewValue;
-            
+
             graphics.ResetTransform();
             graphics.TranslateTransform(0, -view.Y);
 
             DrawGrid();
-        }
-
-        private void DrawGrid()
-        {
-            graphics.Clear(Color.White);
-
-            grid.Render(graphics);
-            pb_Ozone.Refresh();
-        }
-
-        private void bt_StartStop_Click(object sender, EventArgs e)
-        {
-            if (!working)
-            {
-                working = true;
-                bt_StartStop.Text = "Stop";
-         
-                updateThread = new Thread(new ThreadStart(UpdateGrid));
-                updateThread.Start();
-            }
-            else
-            {
-                working = false;
-                bt_StartStop.Text = "Start";
-                updateThread.Abort();
-            }
-        }
-
-        private void UpdateGrid()
-        {
-            grid.UpdateFinished += grid_UpdateFinished;
-
-            while (true)
-            {
-                grid.Update();
-
-                this.Invoke(new Action(() =>
-                    {
-                        DrawGrid();
-                    }
-                ));
-            }
-        }
-
-        private void grid_UpdateFinished(object sender, EventArgs e)
-        {
-            this.Invoke(new Action(() =>
-                {
-                    lbl_NumberOfLivingCells.Text = grid.LivingCells.ToString();
-                }
-            ));
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -143,20 +191,6 @@ namespace LifeGame
             if (updateThread != null)
             if (updateThread.IsAlive)
                 updateThread.Abort();
-        }
-
-        private void bt_NewGrid_Click(object sender, EventArgs e)
-        {
-            bt_StartStop.Text = "Start";
-            graphics.Clear(Color.White);
-
-            CloseUpdateThread();
-            CreateGrid();
-        }
-
-        private void pb_Ozone_Paint(object sender, PaintEventArgs e)
-        {
-            base.OnPaint(e);
         }
     }
 }

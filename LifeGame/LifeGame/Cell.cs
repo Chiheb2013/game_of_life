@@ -5,7 +5,7 @@ using Mappy;
 
 namespace LifeGame
 {
-    class Cell
+    public class Cell
     {
         public const int CELL_SIZE = 5;
 
@@ -13,7 +13,7 @@ namespace LifeGame
 
         Color color;
         Color aliveColor;
-        Vector2D position;
+        Point position;
 
         public bool Alive { get { return alive; } }
 
@@ -22,12 +22,21 @@ namespace LifeGame
 
         static Random r = new Random();
 
-        public Cell(Vector2D position, bool alive)
+        public Cell()
+        {
+            this.alive = false;
+            this.position = new Point();
+
+            this.aliveColor = PickRandomColor();
+            DetermineColorFromLifeState();
+        }
+
+        public Cell(Point position, bool alive)
         {
             this.alive = alive;
-            this.position = new Vector2D(position.X * CELL_SIZE, position.Y * CELL_SIZE);
+            this.position = new Point(position.X * CELL_SIZE, position.Y * CELL_SIZE);
 
-            aliveColor = Color.FromArgb(r.Next(255), r.Next(255), r.Next(255));
+            this.aliveColor = PickRandomColor();
             DetermineColorFromLifeState();
         }
 
@@ -63,6 +72,11 @@ namespace LifeGame
                 color = aliveColor;
             else
                 color = Color.White;
+        }
+
+        private Color PickRandomColor()
+        {
+            return Color.FromArgb(r.Next(35, 255), r.Next(35, 255), r.Next(35, 255));
         }
     }
 }

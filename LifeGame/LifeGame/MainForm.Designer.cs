@@ -40,11 +40,15 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.vsc_VerticalScroller = new System.Windows.Forms.VScrollBar();
             this.hsc_HorizontalScroller = new System.Windows.Forms.HScrollBar();
+            this.gb_SaveOptions = new System.Windows.Forms.GroupBox();
+            this.bt_LoadFrom = new System.Windows.Forms.Button();
+            this.bt_SaveTo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridWidth)).BeginInit();
             this.panel2.SuspendLayout();
+            this.gb_SaveOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // pb_Ozone
@@ -57,7 +61,6 @@
             this.pb_Ozone.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pb_Ozone.TabIndex = 0;
             this.pb_Ozone.TabStop = false;
-            this.pb_Ozone.Paint += new System.Windows.Forms.PaintEventHandler(this.pb_Ozone_Paint);
             // 
             // panel1
             // 
@@ -69,7 +72,7 @@
             this.panel1.Controls.Add(this.bt_StartStop);
             this.panel1.Controls.Add(this.lbl_NumberOfLivingCells);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(138, 416);
+            this.panel1.Location = new System.Drawing.Point(15, 416);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(376, 51);
             this.panel1.TabIndex = 1;
@@ -78,7 +81,7 @@
             // 
             this.nud_GridHeight.Location = new System.Drawing.Point(111, 26);
             this.nud_GridHeight.Maximum = new decimal(new int[] {
-            1000,
+            255,
             0,
             0,
             0});
@@ -100,7 +103,7 @@
             // 
             this.nud_GridWidth.Location = new System.Drawing.Point(60, 26);
             this.nud_GridWidth.Maximum = new decimal(new int[] {
-            1000,
+            255,
             0,
             0,
             0});
@@ -194,11 +197,43 @@
             this.hsc_HorizontalScroller.TabIndex = 1;
             this.hsc_HorizontalScroller.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hsc_HorizontalScroller_Scroll);
             // 
+            // gb_SaveOptions
+            // 
+            this.gb_SaveOptions.Controls.Add(this.bt_LoadFrom);
+            this.gb_SaveOptions.Controls.Add(this.bt_SaveTo);
+            this.gb_SaveOptions.Location = new System.Drawing.Point(400, 416);
+            this.gb_SaveOptions.Name = "gb_SaveOptions";
+            this.gb_SaveOptions.Size = new System.Drawing.Size(200, 51);
+            this.gb_SaveOptions.TabIndex = 3;
+            this.gb_SaveOptions.TabStop = false;
+            this.gb_SaveOptions.Text = "Save && Load";
+            // 
+            // bt_LoadFrom
+            // 
+            this.bt_LoadFrom.Location = new System.Drawing.Point(102, 19);
+            this.bt_LoadFrom.Name = "bt_LoadFrom";
+            this.bt_LoadFrom.Size = new System.Drawing.Size(92, 23);
+            this.bt_LoadFrom.TabIndex = 1;
+            this.bt_LoadFrom.Text = "Load from..";
+            this.bt_LoadFrom.UseVisualStyleBackColor = true;
+            this.bt_LoadFrom.Click += new System.EventHandler(this.bt_LoadFrom_Click);
+            // 
+            // bt_SaveTo
+            // 
+            this.bt_SaveTo.Location = new System.Drawing.Point(6, 19);
+            this.bt_SaveTo.Name = "bt_SaveTo";
+            this.bt_SaveTo.Size = new System.Drawing.Size(90, 23);
+            this.bt_SaveTo.TabIndex = 0;
+            this.bt_SaveTo.Text = "Save to..";
+            this.bt_SaveTo.UseVisualStyleBackColor = true;
+            this.bt_SaveTo.Click += new System.EventHandler(this.bt_SaveTo_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(612, 479);
+            this.Controls.Add(this.gb_SaveOptions);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -212,6 +247,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridWidth)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.gb_SaveOptions.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -230,6 +266,9 @@
         private System.Windows.Forms.NumericUpDown nud_GridHeight;
         private System.Windows.Forms.NumericUpDown nud_GridWidth;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.GroupBox gb_SaveOptions;
+        private System.Windows.Forms.Button bt_LoadFrom;
+        private System.Windows.Forms.Button bt_SaveTo;
     }
 }
 

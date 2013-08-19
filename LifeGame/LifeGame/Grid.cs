@@ -1,4 +1,10 @@
-﻿using System;
+﻿//CoordinateSystemConvert is a class from Mappy, an external library.
+//It is used here to convert 1D coordinates (an index in an array) to
+//2D coordinates (the position on the grid). Life Game uses it to know
+//the positions of the cells, since they are stored in a 1D array and not
+//in a matrix.
+
+using System;
 using System.Linq;
 using System.Drawing;
 using System.Collections.Generic;
@@ -7,18 +13,18 @@ using Mappy;
 
 namespace LifeGame
 {
-    class Grid
+    public class Grid
     {
         public event EventHandler UpdateFinished;
         Random rand = new Random();
 
         Cell[] copy;
         Cell[] cells;
-        Vector2D size;
 
-        public int Width { get { return (int)size.X; } }
-        public int Height { get { return (int)size.Y; } }
+        Point size;
 
+        public int Width { get { return size.X; } }
+        public int Height { get { return size.Y; } }
         public int LivingCells
         {
             get
@@ -27,11 +33,28 @@ namespace LifeGame
             }
         }
 
-        public Grid(Vector2D size)
+        public Cell[] Cells { get { return cells; } }
+
+        public Grid()
+        {
+            this.size = new Point(10, 10);
+
+            CreateCells();
+        }
+
+        public Grid(Point size)
         {
             this.size = size;
 
             CreateCells();
+        }
+
+        public Grid(Point size, Cell[] cells)
+        {
+            this.size = size;
+            this.cells = cells;
+
+            this.copy = new Cell[size.X * size.Y];
         }
 
         private void CreateCells()
@@ -51,8 +74,9 @@ namespace LifeGame
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
+                    //to know more about CoordinateSystemConverter, see above (file start, before using's)
                     int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
-                    cells[i] = new Cell(new Vector2D(x, y), rand.NextDouble() > 0.4);
+                    cells[i] = new Cell(new Point(x, y), rand.NextDouble() > 0.4);
                 }
         }
 
