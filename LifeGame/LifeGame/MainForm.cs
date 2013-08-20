@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -75,8 +76,15 @@ namespace LifeGame
         {
             try
             {
+                GridStorageHelper store = new GridStorageHelper();
+
                 string to = DialogHelper.GetSavePath("Save grid...", "Grid|*.xgrid");
-                GridStorageHelper.SaveGrid(grid, to);
+                store.SaveGrid(grid, to);
+            }
+            catch (FileNotFoundException x)
+            {
+                MessageBox.Show("The file was not found.", "LifeGame", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             catch (Exception x)
             {
@@ -88,21 +96,33 @@ namespace LifeGame
         {
             try
             {
-                string from = DialogHelper.GetLoadPath("Load grid...", "Grid|*.xgrid");
-                grid = GridStorageHelper.LoadGrid(from);
-
-                InitializeLifeGame(hasGrid: true);
-
-                nud_GridWidth.Value = (decimal)grid.Width;
-                nud_GridHeight.Value = (decimal)grid.Height;
-
-                RefreshUI();
-                DrawGrid();
+                GridLoadingForm glf = new GridLoadingForm();
+                glf.LoadingFinished += glf_LoadingFinished;
+                glf.ShowDialog();
+            }
+            catch (FileNotFoundException x)
+            {
+                MessageBox.Show("The file was not found.", "LifeGame", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             catch (Exception x)
             {
-                MessageBox.Show("An error occured : " + x.Message);
+                MessageBox.Show("An error occured : " + x.Message, "LifeGame", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
+        }
+
+        private void glf_LoadingFinished(object sender, EventArgs e)
+        {
+            grid = ((GridEventArgs)e).Grid;
+
+            InitializeLifeGame(hasGrid: true);
+
+            nud_GridWidth.Value = (decimal)grid.Width;
+            nud_GridHeight.Value = (decimal)grid.Height;
+
+            RefreshUI();
+            DrawGrid();
         }
 
         private void bt_StartStop_Click(object sender, EventArgs e)

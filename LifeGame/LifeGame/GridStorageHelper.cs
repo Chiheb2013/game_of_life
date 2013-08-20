@@ -8,9 +8,12 @@ using Mappy;
 
 namespace LifeGame
 {
-    static class GridStorageHelper
+    class GridStorageHelper
     {
-        public static void SaveGrid(Grid grid, string to)
+        public event Action<int> BitsIterationPassed;
+        public event Action<int> CellsIterationPassed;
+
+        public void SaveGrid(Grid grid, string to)
         {
             try
             {
@@ -42,7 +45,7 @@ namespace LifeGame
             }
         }
 
-        private static void WriteGridProperties(Grid grid, FileStream fs)
+        private void WriteGridProperties(Grid grid, FileStream fs)
         {
             fs.WriteByte((byte)grid.Width);
             fs.WriteByte((byte)grid.Height);
@@ -50,7 +53,7 @@ namespace LifeGame
             WriteGridIteration(grid.Iteration, fs);
         }
 
-        private static void WriteGridIteration(int iteration, FileStream fs)
+        private void WriteGridIteration(int iteration, FileStream fs)
         {
             StringBuilder lengthBinary = new StringBuilder((Convert.ToString(iteration, 2).AdjustNumberOfBitsToN()));
 
@@ -62,7 +65,7 @@ namespace LifeGame
             fs.WriteByte(Convert.ToByte(parts[3], 2));
         }
 
-        private static string[] CutStringBuilderInFour(ref StringBuilder lengthBinary)
+        private string[] CutStringBuilderInFour(ref StringBuilder lengthBinary)
         {
             lengthBinary.Insert(8, " ");
             lengthBinary.Insert(17, " ");
@@ -71,7 +74,7 @@ namespace LifeGame
             return lengthBinary.ToString().Split(' ');
         }
 
-        public static Grid LoadGrid(string from)
+        public Grid LoadGrid(string from)
         {
             try
             {
@@ -96,7 +99,7 @@ namespace LifeGame
             }
         }
 
-        private static int ReadGridIteration(FileStream fs)
+        private int ReadGridIteration(FileStream fs)
         {
             byte[] bytes = new byte[4];
             fs.Read(bytes, 0, 4);
@@ -108,7 +111,7 @@ namespace LifeGame
             return Convert.ToInt32(iterationBinary, fromBase: 2);
         }
 
-        private static List<int> GetCellsLifeState(FileStream fs, int sequenceLength)
+        private List<int> GetCellsLifeState(FileStream fs, int sequenceLength)
         {
             List<int> cells = new List<int>();
             for (int i = 0; i < sequenceLength; i++)
@@ -116,22 +119,40 @@ namespace LifeGame
                 string bits = Convert.ToString(fs.ReadByte(), toBase: 2).AdjustNumberOfBitsToN(sizeof(long));
                 foreach (char bit in bits)
                     cells.Add(bit == '1' ? 1 : 0);
+
+                double percent = (double)i / (double)sequenceLength * 100.0;
+                RaiseBitsIterationEvent((int)percent + 1);
             }
             return cells;
         }
 
-        private static List<Cell> CreateCells(int width, int gridArea, List<int> cells)
+        private List<Cell> CreateCells(int width, int gridArea, List<int> cells)
         {
             List<Cell> acells = new List<Cell>();
             for (int i = 0; i < gridArea; i++)
             {
                 Vector2D v = CoordinateSystemConverter.LineToPlane(i, width);
                 acells.Add(new Cell(new Point((int)v.X, (int)v.Y), cells[i] == 1));
+
+                double percent = (double)i / (double)gridArea * 100.0;
+                RaiseCellsIterationEvent((int)percent + 1);
             }
             return acells;
         }
 
-        private static string GetBinaryFromByte(byte byteValue)
+        private void RaiseBitsIterationEvent(int percent)
+        {
+            if (BitsIterationPassed != null)
+                BitsIterationPassed(percent);
+        }
+
+        private void RaiseCellsIterationEvent(int percent)
+        {
+            if (CellsIterationPassed != null)
+                CellsIterationPassed(percent);
+        }
+
+        private string GetBinaryFromByte(byte byteValue)
         {
             return Convert.ToString(byteValue, toBase: 2).AdjustNumberOfBitsToN(8);
         }
