@@ -92,12 +92,12 @@ namespace LifeGame
                 }
         }
 
-        public virtual void Update()
+        public virtual void Update(bool useMeanColor = false)
         {
             iteration++;
 
             CreateGridCopy();
-            DetermineNextStateForCells();
+            DetermineNextStateForCells(useMeanColor);
             RaiseUpdateFinishedEvent();
         }
 
@@ -106,7 +106,7 @@ namespace LifeGame
             cells.CopyTo(copy, 0);
         }
         
-        private void DetermineNextStateForCells()
+        private void DetermineNextStateForCells(bool useMeanColor)
         {
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
@@ -114,11 +114,26 @@ namespace LifeGame
                     int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
 
                     int[] neighbours = GetNeightboursIndexes(i);
-                    int aliveNeighbours = GetNumberOfAliveCellsIn(neighbours);
+                    Cell[] neighboursCells = GetAliveCells(neighbours);
+                    int aliveNeighbours = neighboursCells.Length;
 
-                    if (aliveNeighbours == 3) cells[i].Live();
-                    else if (aliveNeighbours < 2 || aliveNeighbours >= 4) cells[i].Kill();
+                    DetermineCellLifeState(i, aliveNeighbours);
+
+                    if (useMeanColor)
+                        DetermineCellMeanColor(i, neighboursCells);
                 }
+        }
+
+        private void DetermineCellLifeState(int i, int aliveNeighbours)
+        {
+            if (aliveNeighbours == 3) cells[i].Live();
+            else if (aliveNeighbours < 2 || aliveNeighbours >= 4) cells[i].Kill();
+        }
+
+        private void DetermineCellMeanColor(int i, Cell[] neighbours)
+        {
+            if (neighbours.Length > 0)
+                cells[i].Color = Cell.GetMeanColor(neighbours);
         }
 
         private int[] GetNeightboursIndexes(int i)
@@ -151,15 +166,15 @@ namespace LifeGame
             return neightbours.ToArray();
         }
 
-        private int GetNumberOfAliveCellsIn(int[] neighbours)
+        private Cell[] GetAliveCells(int[] neighbours)
         {
-            return neighbours.Count<int>(new Func<int, bool>((cell) =>
-            {
-                if (cell > -1 && cell < copy.Length)
-                    return copy[cell].Alive;
-                return false;
-            }
-            ));
+            List<Cell> alive = new List<Cell>();
+
+            foreach (int index in neighbours)
+                if (index > -1 && index < copy.Length)
+                if (copy[index].Alive)
+                    alive.Add(copy[index]);
+            return alive.ToArray();
         }
 
         protected void RaiseUpdateFinishedEvent()

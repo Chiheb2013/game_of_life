@@ -20,6 +20,8 @@ namespace LifeGame
         public int X { get { return (int)position.X; } }
         public int Y { get { return (int)position.Y; } }
 
+        public Color Color { get { return color; } set { color = value; } }
+
         public static Random r = new Random();
 
         public Cell()
@@ -62,7 +64,6 @@ namespace LifeGame
         public virtual void Render(Graphics graphics)
         {
             Rectangle rectangle = new Rectangle(X, Y, CELL_SIZE - 1, CELL_SIZE - 1);
-
             graphics.FillRectangle(new SolidBrush(color), rectangle);
         }
 
@@ -72,6 +73,24 @@ namespace LifeGame
                 color = aliveColor;
             else
                 color = Color.White;
+        }
+
+        public static Color GetMeanColor(Cell[] neighbours)
+        {
+            float red = 0, green = 0, blue = 0;
+
+            foreach (Cell cell in neighbours)
+            {
+                red += cell.color.R;
+                green += cell.color.G;
+                blue += cell.color.B;
+            }
+
+            red /= neighbours.Length;
+            green /= neighbours.Length;
+            blue /= neighbours.Length;
+
+            return Color.FromArgb((int)red, (int)green, (int)blue);
         }
 
         public static Color PickRandomColor()

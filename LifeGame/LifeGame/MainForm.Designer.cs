@@ -46,6 +46,7 @@
             this.bt_LoadFrom = new System.Windows.Forms.Button();
             this.bt_SaveTo = new System.Windows.Forms.Button();
             this.chk_UseHexagonalGrid = new System.Windows.Forms.CheckBox();
+            this.chk_UseMeanColor = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridHeight)).BeginInit();
@@ -68,6 +69,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.chk_UseMeanColor);
             this.panel1.Controls.Add(this.chk_UseHexagonalGrid);
             this.panel1.Controls.Add(this.lbl_CurrentIteration);
             this.panel1.Controls.Add(this.label3);
@@ -80,7 +82,7 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Location = new System.Drawing.Point(15, 416);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(376, 51);
+            this.panel1.Size = new System.Drawing.Size(376, 79);
             this.panel1.TabIndex = 1;
             // 
             // lbl_CurrentIteration
@@ -107,7 +109,7 @@
             0,
             0,
             0});
-            this.nud_GridHeight.Location = new System.Drawing.Point(111, 26);
+            this.nud_GridHeight.Location = new System.Drawing.Point(111, 45);
             this.nud_GridHeight.Maximum = new decimal(new int[] {
             248,
             0,
@@ -134,7 +136,7 @@
             0,
             0,
             0});
-            this.nud_GridWidth.Location = new System.Drawing.Point(60, 26);
+            this.nud_GridWidth.Location = new System.Drawing.Point(60, 45);
             this.nud_GridWidth.Maximum = new decimal(new int[] {
             248,
             0,
@@ -157,7 +159,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 28);
+            this.label1.Location = new System.Drawing.Point(3, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 6;
@@ -165,7 +167,7 @@
             // 
             // bt_NewGrid
             // 
-            this.bt_NewGrid.Location = new System.Drawing.Point(296, 23);
+            this.bt_NewGrid.Location = new System.Drawing.Point(296, 42);
             this.bt_NewGrid.Name = "bt_NewGrid";
             this.bt_NewGrid.Size = new System.Drawing.Size(75, 23);
             this.bt_NewGrid.TabIndex = 5;
@@ -175,7 +177,7 @@
             // 
             // bt_StartStop
             // 
-            this.bt_StartStop.Location = new System.Drawing.Point(296, 3);
+            this.bt_StartStop.Location = new System.Drawing.Point(296, 18);
             this.bt_StartStop.Name = "bt_StartStop";
             this.bt_StartStop.Size = new System.Drawing.Size(75, 23);
             this.bt_StartStop.TabIndex = 4;
@@ -271,11 +273,21 @@
             this.chk_UseHexagonalGrid.Text = "Create hexa grid";
             this.chk_UseHexagonalGrid.UseVisualStyleBackColor = true;
             // 
+            // chk_UseMeanColor
+            // 
+            this.chk_UseMeanColor.AutoSize = true;
+            this.chk_UseMeanColor.Location = new System.Drawing.Point(177, 46);
+            this.chk_UseMeanColor.Name = "chk_UseMeanColor";
+            this.chk_UseMeanColor.Size = new System.Drawing.Size(100, 17);
+            this.chk_UseMeanColor.TabIndex = 12;
+            this.chk_UseMeanColor.Text = "Use mean color";
+            this.chk_UseMeanColor.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 479);
+            this.ClientSize = new System.Drawing.Size(612, 507);
             this.Controls.Add(this.gb_SaveOptions);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -315,6 +327,7 @@
         private System.Windows.Forms.Label lbl_CurrentIteration;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chk_UseHexagonalGrid;
+        private System.Windows.Forms.CheckBox chk_UseMeanColor;
     }
 }
 

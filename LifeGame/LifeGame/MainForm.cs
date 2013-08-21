@@ -145,7 +145,7 @@ namespace LifeGame
 
             while (true)
             {
-                grid.Update();
+                grid.Update(chk_UseMeanColor.Checked);
                 Render();
             }
         }
