@@ -50,6 +50,7 @@ namespace LifeGame
         public void Live()
         {
             alive = true;
+            aliveColor = PickRandomColor();
 
             DetermineColorFromLifeState();
         }
@@ -57,6 +58,7 @@ namespace LifeGame
         public void Kill()
         {
             alive = false;
+            aliveColor = PickRandomColor();
 
             DetermineColorFromLifeState();
         }

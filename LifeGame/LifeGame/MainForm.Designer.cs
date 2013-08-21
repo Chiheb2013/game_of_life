@@ -109,7 +109,7 @@
             0,
             0,
             0});
-            this.nud_GridHeight.Location = new System.Drawing.Point(111, 45);
+            this.nud_GridHeight.Location = new System.Drawing.Point(108, 26);
             this.nud_GridHeight.Maximum = new decimal(new int[] {
             248,
             0,
@@ -136,7 +136,7 @@
             0,
             0,
             0});
-            this.nud_GridWidth.Location = new System.Drawing.Point(60, 45);
+            this.nud_GridWidth.Location = new System.Drawing.Point(60, 26);
             this.nud_GridWidth.Maximum = new decimal(new int[] {
             248,
             0,
@@ -159,7 +159,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 47);
+            this.label1.Location = new System.Drawing.Point(3, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 6;
@@ -266,7 +266,7 @@
             // chk_UseHexagonalGrid
             // 
             this.chk_UseHexagonalGrid.AutoSize = true;
-            this.chk_UseHexagonalGrid.Location = new System.Drawing.Point(177, 27);
+            this.chk_UseHexagonalGrid.Location = new System.Drawing.Point(6, 52);
             this.chk_UseHexagonalGrid.Name = "chk_UseHexagonalGrid";
             this.chk_UseHexagonalGrid.Size = new System.Drawing.Size(103, 17);
             this.chk_UseHexagonalGrid.TabIndex = 11;
@@ -276,7 +276,7 @@
             // chk_UseMeanColor
             // 
             this.chk_UseMeanColor.AutoSize = true;
-            this.chk_UseMeanColor.Location = new System.Drawing.Point(177, 46);
+            this.chk_UseMeanColor.Location = new System.Drawing.Point(115, 52);
             this.chk_UseMeanColor.Name = "chk_UseMeanColor";
             this.chk_UseMeanColor.Size = new System.Drawing.Size(100, 17);
             this.chk_UseMeanColor.TabIndex = 12;

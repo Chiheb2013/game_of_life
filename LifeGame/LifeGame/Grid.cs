@@ -108,6 +108,12 @@ namespace LifeGame
         
         private void DetermineNextStateForCells(bool useMeanColor)
         {
+            DetermineNextLifeState();
+            DetermineNextColorState(useMeanColor);
+        }
+
+        private void DetermineNextLifeState()
+        {
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
@@ -118,9 +124,19 @@ namespace LifeGame
                     int aliveNeighbours = neighboursCells.Length;
 
                     DetermineCellLifeState(i, aliveNeighbours);
+                }
+        }
 
+        private void DetermineNextColorState(bool useMeanColor)
+        {
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
+                    Cell[] neighbours = GetAliveCells(GetNeightboursIndexes(i));
+                    
                     if (useMeanColor)
-                        DetermineCellMeanColor(i, neighboursCells);
+                        DetermineCellMeanColor(i, neighbours);
                 }
         }
 
