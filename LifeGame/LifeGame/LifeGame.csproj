@@ -61,6 +61,8 @@
       <DependentUpon>GridLoadingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GridStorageHelper.cs" />
+    <Compile Include="HexagonalCell.cs" />
+    <Compile Include="HexagonalGrid.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

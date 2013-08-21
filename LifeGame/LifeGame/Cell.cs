@@ -9,18 +9,18 @@ namespace LifeGame
     {
         public const int CELL_SIZE = 5;
 
-        bool alive;
+        protected bool alive;
 
-        Color color;
-        Color aliveColor;
-        Point position;
+        protected Color color;
+        protected Color aliveColor;
+        protected Point position;
 
         public bool Alive { get { return alive; } }
 
         public int X { get { return (int)position.X; } }
         public int Y { get { return (int)position.Y; } }
 
-        static Random r = new Random();
+        public static Random r = new Random();
 
         public Cell()
         {
@@ -59,14 +59,14 @@ namespace LifeGame
             DetermineColorFromLifeState();
         }
 
-        public void Render(Graphics graphics)
+        public virtual void Render(Graphics graphics)
         {
             Rectangle rectangle = new Rectangle(X, Y, CELL_SIZE - 1, CELL_SIZE - 1);
 
             graphics.FillRectangle(new SolidBrush(color), rectangle);
         }
 
-        private void DetermineColorFromLifeState()
+        public void DetermineColorFromLifeState()
         {
             if (alive)
                 color = aliveColor;
@@ -74,7 +74,7 @@ namespace LifeGame
                 color = Color.White;
         }
 
-        private Color PickRandomColor()
+        public static Color PickRandomColor()
         {
             return Color.FromArgb(r.Next(35, 255), r.Next(35, 255), r.Next(35, 255));
         }

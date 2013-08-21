@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
+using Mappy;
+
 namespace LifeGame
 {
     public partial class MainForm : Form
@@ -52,7 +54,11 @@ namespace LifeGame
         private void CreateGrid()
         {
             Point gridSize = new Point((int)nud_GridWidth.Value, (int)nud_GridHeight.Value);
-            grid = new Grid(gridSize);
+
+            if (!chk_UseHexagonalGrid.Checked)
+                grid = new Grid(gridSize);
+            else
+                grid = new HexagonalGrid(new Vector2D(gridSize.X, gridSize.Y));
         }
 
         private void CreateBitmap()
@@ -81,7 +87,7 @@ namespace LifeGame
                 string to = DialogHelper.GetSavePath("Save grid...", "Grid|*.xgrid");
                 store.SaveGrid(grid, to);
             }
-            catch (FileNotFoundException x)
+            catch (FileNotFoundException)
             {
                 MessageBox.Show("The file was not found.", "LifeGame", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);

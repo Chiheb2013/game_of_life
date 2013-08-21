@@ -1,72 +1,54 @@
-﻿//CoordinateSystemConvert is a class from Mappy, an external library.
-//It is used here to convert 1D coordinates (an index in an array) to
-//2D coordinates (the position on the grid). Life Game uses it to know
-//the positions of the cells, since they are stored in a 1D array and not
-//in a matrix.
-
-using System;
-using System.Linq;
-using System.Drawing;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 using Mappy;
 
 namespace LifeGame
 {
-    public class Grid
+    class HexagonalGrid : Grid
     {
-        public event EventHandler UpdateFinished;
-        Random rand = new Random();
+        Vector2D size;
 
-        protected int iteration;
+        HexagonalCell[] copy;
+        HexagonalCell[] cells;
 
-        Cell[] copy;
-        Cell[] cells;
+        public new int Width { get { return (int)size.X; } }
+        public new int Height { get { return (int)size.Y; } }
 
-        Point size;
-
-        public int Width { get { return size.X; } }
-        public int Height { get { return size.Y; } }
-        public int Iteration { get { return iteration; } }
-        public int LivingCells
+        public new int LivingCells
         {
             get
             {
-                return cells.Where<Cell>(new Func<Cell, bool>((cell) => cell.Alive)).Count();
+                return cells.Where<HexagonalCell>(new Func<HexagonalCell, bool>((cell) => cell.Alive)).Count();
             }
         }
 
-        public Cell[] Cells { get { return cells; } }
+        public new HexagonalCell[] Cells { get { return cells; } }
 
-        public Grid()
+        public HexagonalGrid()
         {
-            this.size = new Point(10, 10);
-
+            this.size = new Vector2D(8, 8);
             CreateCells();
         }
 
-        public Grid(Point size)
+        public HexagonalGrid(Vector2D size)
         {
             this.size = size;
-
             CreateCells();
         }
 
-        public Grid(Point size, Cell[] cells)
-        {
-            this.size = size;
-            this.cells = cells;
-
-            this.copy = new Cell[size.X * size.Y];
-        }
-
-        public Grid(Point size, Cell[] cells, int iteration)
+        public HexagonalGrid(Vector2D size, HexagonalCell[] cells, int iteration)
         {
             this.size = size;
             this.cells = cells;
             this.iteration = iteration;
 
-            this.copy = new Cell[size.X * size.Y];
+            this.copy = new HexagonalCell[Width * Height];
         }
 
         private void CreateCells()
@@ -77,8 +59,8 @@ namespace LifeGame
 
         private void CreateEmptyGrids()
         {
-            cells = new Cell[Width * Height];
-            copy = new Cell[Width * Height];
+            cells = new HexagonalCell[Width * Height];
+            copy = new HexagonalCell[Width * Height];
         }
 
         private void FillGrid()
@@ -86,13 +68,13 @@ namespace LifeGame
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
-                    //to know more about CoordinateSystemConverter, see above (file start, before using's)
                     int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
-                    cells[i] = new Cell(new Point(x, y), rand.NextDouble() < 0.4);
+                    cells[i] = new HexagonalCell(new Vector2D(x, y), new Vector2D(10, 20), 
+                        HexagonalCell.r.NextDouble() < 0.4);
                 }
         }
 
-        public virtual void Update()
+        public override void Update()
         {
             iteration++;
 
@@ -105,7 +87,7 @@ namespace LifeGame
         {
             cells.CopyTo(copy, 0);
         }
-        
+
         private void DetermineNextStateForCells()
         {
             for (int x = 0; x < Width; x++)
@@ -125,25 +107,20 @@ namespace LifeGame
         {
             List<int> neightbours = new List<int>();
 
-            int cx = copy[i].X / Cell.CELL_SIZE;
-            int cy = copy[i].Y / Cell.CELL_SIZE;
+            int cx = copy[i].X;
+            int cy = copy[i].Y;
 
             int up = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx, cy - 1), Width);
-            int upRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cx - 1), Width);
+            int upRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy - 1), Width);
             int upLeft = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy - 1), Width);
 
-            int left = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy), Width);
-            int right = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy), Width);
-
             int bottom = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx, cy + 1), Width);
-            int bottomLeft = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy + 1), Width);
             int bottomRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy + 1), Width);
+            int bottomLeft = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy + 1), Width);
 
             neightbours.Add(up);
             neightbours.Add(upLeft);
             neightbours.Add(upRight);
-            neightbours.Add(left);
-            neightbours.Add(right);
             neightbours.Add(bottom);
             neightbours.Add(bottomLeft);
             neightbours.Add(bottomRight);
@@ -154,24 +131,40 @@ namespace LifeGame
         private int GetNumberOfAliveCellsIn(int[] neighbours)
         {
             return neighbours.Count<int>(new Func<int, bool>((cell) =>
-            {
-                if (cell > -1 && cell < copy.Length)
-                    return copy[cell].Alive;
-                return false;
-            }
+                {
+                    if (cell > -1 && cell < copy.Length)
+                        return copy[cell].Alive;
+                    return false;
+                }
             ));
         }
 
-        protected void RaiseUpdateFinishedEvent()
+        public override void Render(Graphics graphics)
         {
-            if (UpdateFinished != null)
-                UpdateFinished(this, EventArgs.Empty);
+            DrawRow(graphics, Vector2D.Zero, 0);
+            for (int y = 1; y < Height; y++)
+                DrawRow(graphics, new Vector2D(0, y * HexagonalCell.DIAMETER), y);
         }
 
-        public virtual void Render(Graphics graphics)
+        private void DrawRow(Graphics graphics, Vector2D translation, int row)
         {
-            foreach (Cell cell in cells)
-                cell.Render(graphics);
+            for (int x = 0; x < Width; x++)
+            {
+                int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x * HexagonalCell.RADIUS, -HexagonalCell.DIAMETER), Width);
+
+                if (x % 2 != 0)
+                {
+                    Vector2D totalTranslation = new Vector2D(x * HexagonalCell.RADIUS, -HexagonalCell.DIAMETER);
+                    totalTranslation += translation;
+                    cells[i].Render(graphics, totalTranslation);
+                }
+                else
+                {
+                    Vector2D totalTranslation = new Vector2D(x * HexagonalCell.RADIUS, 0);
+                    totalTranslation += translation;
+                    cells[i].Render(graphics, totalTranslation);
+                }
+            }
         }
     }
 }

@@ -30,6 +30,8 @@
         {
             this.pb_Ozone = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lbl_CurrentIteration = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.nud_GridHeight = new System.Windows.Forms.NumericUpDown();
             this.nud_GridWidth = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,8 +45,7 @@
             this.gb_SaveOptions = new System.Windows.Forms.GroupBox();
             this.bt_LoadFrom = new System.Windows.Forms.Button();
             this.bt_SaveTo = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lbl_CurrentIteration = new System.Windows.Forms.Label();
+            this.chk_UseHexagonalGrid = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridHeight)).BeginInit();
@@ -67,6 +68,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.chk_UseHexagonalGrid);
             this.panel1.Controls.Add(this.lbl_CurrentIteration);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.nud_GridHeight);
@@ -80,6 +82,23 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(376, 51);
             this.panel1.TabIndex = 1;
+            // 
+            // lbl_CurrentIteration
+            // 
+            this.lbl_CurrentIteration.AutoSize = true;
+            this.lbl_CurrentIteration.Location = new System.Drawing.Point(231, 3);
+            this.lbl_CurrentIteration.Name = "lbl_CurrentIteration";
+            this.lbl_CurrentIteration.Size = new System.Drawing.Size(0, 13);
+            this.lbl_CurrentIteration.TabIndex = 10;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(174, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Iteration :";
             // 
             // nud_GridHeight
             // 
@@ -242,22 +261,15 @@
             this.bt_SaveTo.UseVisualStyleBackColor = true;
             this.bt_SaveTo.Click += new System.EventHandler(this.bt_SaveTo_Click);
             // 
-            // label3
+            // chk_UseHexagonalGrid
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(174, 3);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Iteration :";
-            // 
-            // lbl_CurrentIteration
-            // 
-            this.lbl_CurrentIteration.AutoSize = true;
-            this.lbl_CurrentIteration.Location = new System.Drawing.Point(231, 3);
-            this.lbl_CurrentIteration.Name = "lbl_CurrentIteration";
-            this.lbl_CurrentIteration.Size = new System.Drawing.Size(0, 13);
-            this.lbl_CurrentIteration.TabIndex = 10;
+            this.chk_UseHexagonalGrid.AutoSize = true;
+            this.chk_UseHexagonalGrid.Location = new System.Drawing.Point(177, 27);
+            this.chk_UseHexagonalGrid.Name = "chk_UseHexagonalGrid";
+            this.chk_UseHexagonalGrid.Size = new System.Drawing.Size(103, 17);
+            this.chk_UseHexagonalGrid.TabIndex = 11;
+            this.chk_UseHexagonalGrid.Text = "Create hexa grid";
+            this.chk_UseHexagonalGrid.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -302,6 +314,7 @@
         private System.Windows.Forms.Button bt_SaveTo;
         private System.Windows.Forms.Label lbl_CurrentIteration;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox chk_UseHexagonalGrid;
     }
 }
 
