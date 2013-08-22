@@ -7,13 +7,14 @@ namespace LifeGame
 {
     public class Cell
     {
-        public const int CELL_SIZE = 5;
+        public const int CELL_SIZE = 10;
 
         protected bool alive;
 
         protected Color color;
         protected Color aliveColor;
         protected Point position;
+        protected Grid parent;
 
         public bool Alive { get { return alive; } }
 
@@ -21,6 +22,7 @@ namespace LifeGame
         public int Y { get { return (int)position.Y; } }
 
         public Color Color { get { return color; } set { color = value; } }
+        public Grid Parent { get { return parent; } set { parent = value; } }
 
         public static Random r = new Random();
 
@@ -33,8 +35,21 @@ namespace LifeGame
             DetermineColorFromLifeState();
         }
 
-        public Cell(Point position, bool alive)
+        public Cell(Grid parent)
         {
+            this.parent = parent;
+
+            this.alive = false;
+            this.position = new Point();
+
+            this.aliveColor = PickRandomColor();
+            DetermineColorFromLifeState();
+        }
+
+        public Cell(Point position, bool alive, Grid parent = null)
+        {
+            this.parent = parent;
+
             this.alive = alive;
             this.position = new Point(position.X * CELL_SIZE, position.Y * CELL_SIZE);
 
@@ -66,6 +81,10 @@ namespace LifeGame
         public virtual void Render(Graphics graphics)
         {
             Rectangle rectangle = new Rectangle(X, Y, CELL_SIZE - 1, CELL_SIZE - 1);
+
+            if (parent.UseMeanColor)
+                rectangle.Size = new Size(rectangle.Size.Width + 1, rectangle.Size.Height + 1);
+
             graphics.FillRectangle(new SolidBrush(color), rectangle);
         }
 

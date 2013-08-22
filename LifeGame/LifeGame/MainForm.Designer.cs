@@ -30,6 +30,8 @@
         {
             this.pb_Ozone = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.chk_UseMeanColor = new System.Windows.Forms.CheckBox();
+            this.chk_UseHexagonalGrid = new System.Windows.Forms.CheckBox();
             this.lbl_CurrentIteration = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.nud_GridHeight = new System.Windows.Forms.NumericUpDown();
@@ -45,8 +47,6 @@
             this.gb_SaveOptions = new System.Windows.Forms.GroupBox();
             this.bt_LoadFrom = new System.Windows.Forms.Button();
             this.bt_SaveTo = new System.Windows.Forms.Button();
-            this.chk_UseHexagonalGrid = new System.Windows.Forms.CheckBox();
-            this.chk_UseMeanColor = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridHeight)).BeginInit();
@@ -84,6 +84,27 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(376, 79);
             this.panel1.TabIndex = 1;
+            // 
+            // chk_UseMeanColor
+            // 
+            this.chk_UseMeanColor.AutoSize = true;
+            this.chk_UseMeanColor.Location = new System.Drawing.Point(115, 52);
+            this.chk_UseMeanColor.Name = "chk_UseMeanColor";
+            this.chk_UseMeanColor.Size = new System.Drawing.Size(100, 17);
+            this.chk_UseMeanColor.TabIndex = 12;
+            this.chk_UseMeanColor.Text = "Use mean color";
+            this.chk_UseMeanColor.UseVisualStyleBackColor = true;
+            this.chk_UseMeanColor.CheckedChanged += new System.EventHandler(this.chk_UseMeanColor_CheckedChanged);
+            // 
+            // chk_UseHexagonalGrid
+            // 
+            this.chk_UseHexagonalGrid.AutoSize = true;
+            this.chk_UseHexagonalGrid.Location = new System.Drawing.Point(6, 52);
+            this.chk_UseHexagonalGrid.Name = "chk_UseHexagonalGrid";
+            this.chk_UseHexagonalGrid.Size = new System.Drawing.Size(103, 17);
+            this.chk_UseHexagonalGrid.TabIndex = 11;
+            this.chk_UseHexagonalGrid.Text = "Create hexa grid";
+            this.chk_UseHexagonalGrid.UseVisualStyleBackColor = true;
             // 
             // lbl_CurrentIteration
             // 
@@ -262,26 +283,6 @@
             this.bt_SaveTo.Text = "Save to..";
             this.bt_SaveTo.UseVisualStyleBackColor = true;
             this.bt_SaveTo.Click += new System.EventHandler(this.bt_SaveTo_Click);
-            // 
-            // chk_UseHexagonalGrid
-            // 
-            this.chk_UseHexagonalGrid.AutoSize = true;
-            this.chk_UseHexagonalGrid.Location = new System.Drawing.Point(6, 52);
-            this.chk_UseHexagonalGrid.Name = "chk_UseHexagonalGrid";
-            this.chk_UseHexagonalGrid.Size = new System.Drawing.Size(103, 17);
-            this.chk_UseHexagonalGrid.TabIndex = 11;
-            this.chk_UseHexagonalGrid.Text = "Create hexa grid";
-            this.chk_UseHexagonalGrid.UseVisualStyleBackColor = true;
-            // 
-            // chk_UseMeanColor
-            // 
-            this.chk_UseMeanColor.AutoSize = true;
-            this.chk_UseMeanColor.Location = new System.Drawing.Point(115, 52);
-            this.chk_UseMeanColor.Name = "chk_UseMeanColor";
-            this.chk_UseMeanColor.Size = new System.Drawing.Size(100, 17);
-            this.chk_UseMeanColor.TabIndex = 12;
-            this.chk_UseMeanColor.Text = "Use mean color";
-            this.chk_UseMeanColor.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 

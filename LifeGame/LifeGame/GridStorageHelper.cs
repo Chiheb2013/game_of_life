@@ -90,6 +90,8 @@ namespace LifeGame
                     List<Cell> cells = CreateCells(width, gridArea, cellsLifeStates);
 
                     Grid grid = new Grid(new Point(width, height), cells.ToArray(), iteration);
+                    SetCellsParent(grid);
+
                     return grid;
                 }
             }
@@ -97,6 +99,12 @@ namespace LifeGame
             {
                 throw e;
             }
+        }
+
+        private static void SetCellsParent(Grid grid)
+        {
+            foreach (Cell cell in grid.Cells)
+                cell.Parent = grid;
         }
 
         private int ReadGridIteration(FileStream fs)

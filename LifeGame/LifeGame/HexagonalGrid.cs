@@ -74,7 +74,7 @@ namespace LifeGame
                 }
         }
 
-        public override void Update(bool useMeanColor)
+        public override void Update()
         {
             iteration++;
 

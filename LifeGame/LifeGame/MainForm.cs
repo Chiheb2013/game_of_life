@@ -106,7 +106,7 @@ namespace LifeGame
                 glf.LoadingFinished += glf_LoadingFinished;
                 glf.ShowDialog();
             }
-            catch (FileNotFoundException x)
+            catch (FileNotFoundException)
             {
                 MessageBox.Show("The file was not found.", "LifeGame", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
@@ -145,7 +145,7 @@ namespace LifeGame
 
             while (true)
             {
-                grid.Update(chk_UseMeanColor.Checked);
+                grid.Update();
                 Render();
             }
         }
@@ -231,6 +231,11 @@ namespace LifeGame
             if (updateThread != null)
             if (updateThread.IsAlive)
                 updateThread.Abort();
+        }
+
+        private void chk_UseMeanColor_CheckedChanged(object sender, EventArgs e)
+        {
+            grid.UseMeanColor = chk_UseMeanColor.Checked;
         }
     }
 }

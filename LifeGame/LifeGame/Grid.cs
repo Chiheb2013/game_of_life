@@ -19,6 +19,7 @@ namespace LifeGame
         Random rand = new Random();
 
         protected int iteration;
+        bool useMeanColor;
 
         Cell[] copy;
         Cell[] cells;
@@ -35,6 +36,7 @@ namespace LifeGame
                 return cells.Where<Cell>(new Func<Cell, bool>((cell) => cell.Alive)).Count();
             }
         }
+        public bool UseMeanColor { get { return useMeanColor; } set { useMeanColor = value; } }
 
         public Cell[] Cells { get { return cells; } }
 
@@ -88,16 +90,16 @@ namespace LifeGame
                 {
                     //to know more about CoordinateSystemConverter, see above (file start, before using's)
                     int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
-                    cells[i] = new Cell(new Point(x, y), rand.NextDouble() < 0.4);
+                    cells[i] = new Cell(new Point(x, y), rand.NextDouble() < 0.4, this);
                 }
         }
 
-        public virtual void Update(bool useMeanColor = false)
+        public virtual void Update()
         {
             iteration++;
 
             CreateGridCopy();
-            DetermineNextStateForCells(useMeanColor);
+            DetermineNextStateForCells();
             RaiseUpdateFinishedEvent();
         }
 
@@ -106,10 +108,10 @@ namespace LifeGame
             cells.CopyTo(copy, 0);
         }
         
-        private void DetermineNextStateForCells(bool useMeanColor)
+        private void DetermineNextStateForCells()
         {
             DetermineNextLifeState();
-            DetermineNextColorState(useMeanColor);
+            DetermineNextColorState();
         }
 
         private void DetermineNextLifeState()
@@ -127,7 +129,7 @@ namespace LifeGame
                 }
         }
 
-        private void DetermineNextColorState(bool useMeanColor)
+        private void DetermineNextColorState()
         {
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
@@ -148,7 +150,7 @@ namespace LifeGame
 
         private void DetermineCellMeanColor(int i, Cell[] neighbours)
         {
-            if (neighbours.Length > 0)
+            if (neighbours.Length > 0 && cells[i].Alive)
                 cells[i].Color = Cell.GetMeanColor(neighbours);
         }
 
@@ -159,24 +161,26 @@ namespace LifeGame
             int cx = copy[i].X / Cell.CELL_SIZE;
             int cy = copy[i].Y / Cell.CELL_SIZE;
 
-            int up = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx, cy - 1), Width);
-            int upRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cx - 1), Width);
             int upLeft = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy - 1), Width);
+            int up = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx, cy - 1), Width);
+            int upRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy - 1), Width);
 
             int left = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy), Width);
             int right = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy), Width);
 
-            int bottom = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx, cy + 1), Width);
             int bottomLeft = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy + 1), Width);
+            int bottom = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx, cy + 1), Width);
             int bottomRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy + 1), Width);
 
-            neightbours.Add(up);
             neightbours.Add(upLeft);
+            neightbours.Add(up);
             neightbours.Add(upRight);
+
             neightbours.Add(left);
             neightbours.Add(right);
-            neightbours.Add(bottom);
+
             neightbours.Add(bottomLeft);
+            neightbours.Add(bottom);
             neightbours.Add(bottomRight);
 
             return neightbours.ToArray();
