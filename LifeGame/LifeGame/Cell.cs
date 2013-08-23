@@ -7,7 +7,7 @@ namespace LifeGame
 {
     public class Cell
     {
-        public const int CELL_SIZE = 10;
+        public static int CELL_SIZE = 5;
 
         protected bool alive;
 
@@ -76,6 +76,13 @@ namespace LifeGame
             aliveColor = PickRandomColor();
 
             DetermineColorFromLifeState();
+        }
+
+        public void ReverseLife()
+        {
+            if (Alive)
+                Kill();
+            else Live();
         }
 
         public virtual void Render(Graphics graphics)

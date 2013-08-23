@@ -11,15 +11,16 @@ namespace LifeGame
     public partial class MainForm : Form
     {
         bool working;
+        bool mouseDown;
 
         Grid grid;
+        Vector2D lastDrawnPosition;
 
         Bitmap bmp;
         Graphics graphics;
+        Rectangle view;
 
         Thread updateThread;
-
-        Rectangle view;
 
         public MainForm()
         {
@@ -35,11 +36,15 @@ namespace LifeGame
 
             CloseUpdateThread();
             InitializeLifeGame();
+
+            Render();
         }
 
         private void InitializeLifeGame(bool hasBitmap = true, bool hasGrid = false)
         {
             working = false;
+            mouseDown = false;
+            lastDrawnPosition = Vector2D.Zero;  //TODO : note to self, in Vector2D, ctr(){this=Vector2D.Zero}
             view = new Rectangle(0, 0, pb_Ozone.Width, pb_Ozone.Height);
 
             if (!hasGrid)
@@ -139,6 +144,31 @@ namespace LifeGame
                 StopWorkerThreadAndSetUI();
         }
 
+        private void pb_Ozone_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (grid != null)
+                lastDrawnPosition = ReverseCellStateAndRender(e);
+        }
+
+        private void pb_Ozone_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (grid != null && mouseDown)
+                lastDrawnPosition = ReverseCellStateAndRender(e);
+        }
+
+        private Vector2D ReverseCellStateAndRender(MouseEventArgs e)
+        {
+            Vector2D position = new Vector2D(e.X / Cell.CELL_SIZE, e.Y / Cell.CELL_SIZE);
+
+            if (!lastDrawnPosition.Equals(position))
+            {
+                grid.ReverseCellLifeState(position);
+                Render();
+            }
+
+            return position;
+        }
+
         private void UpdateGrid()
         {
             grid.UpdateFinished += grid_UpdateFinished;
@@ -157,7 +187,14 @@ namespace LifeGame
 
         private void Render()
         {
-            this.Invoke(new Action(() => DrawGrid()));
+            this.Invoke(new Action(() =>
+                {
+                    DrawGrid();
+
+                    if (chk_ShowGridLimits.Checked)
+                        DrawGridLimits();
+                }
+            ));
         }
 
         private void DrawGrid()
@@ -165,6 +202,16 @@ namespace LifeGame
             graphics.Clear(Color.White);
 
             grid.Render(graphics);
+
+            if (!chk_ShowGridLimits.Checked)
+                pb_Ozone.Refresh();
+        }
+        //TODO : investigate rules
+        private void DrawGridLimits()
+        {
+            Rectangle limits = new Rectangle(0, 0, grid.Width * Cell.CELL_SIZE, grid.Height * Cell.CELL_SIZE);
+            graphics.DrawRectangle(new Pen(Brushes.Blue, 2), limits);
+
             pb_Ozone.Refresh();
         }
 
@@ -236,6 +283,36 @@ namespace LifeGame
         private void chk_UseMeanColor_CheckedChanged(object sender, EventArgs e)
         {
             grid.UseMeanColor = chk_UseMeanColor.Checked;
+        }
+
+        private void pb_Ozone_MouseDown(object sender, MouseEventArgs e)
+        {
+            mouseDown = true;
+        }
+
+        private void pb_Ozone_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseDown = false;
+        }
+
+        private void nud_CellSize_ValueChanged(object sender, EventArgs e)
+        {
+            //Can change cell size, but can't change it the same grid !
+            Cell.CELL_SIZE = (int)nud_CellSize.Value;
+
+            bt_NewGrid_Click(this, e);  //Creates a new grid by simulating a click on
+                                        //the 'new grid' button
+
+            Render();                   //And renders the result
+        }
+
+        private void bt_Hecatomb_Click(object sender, EventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Kill();
+                Render();
+            }
         }
     }
 }

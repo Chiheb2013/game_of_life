@@ -71,27 +71,24 @@ namespace LifeGame
             this.copy = new Cell[size.X * size.Y];
         }
 
-        private void CreateCells()
+        public void Live()
         {
-            CreateEmptyGrids();
-            FillGrid();
+            foreach (Cell cell in cells)
+                cell.Live();
         }
 
-        private void CreateEmptyGrids()
+        public void Kill()
         {
-            cells = new Cell[Width * Height];
-            copy = new Cell[Width * Height];
+            foreach (Cell cell in cells)
+                cell.Kill();
         }
 
-        private void FillGrid()
+        public virtual void ReverseCellLifeState(Vector2D position)
         {
-            for (int x = 0; x < Width; x++)
-                for (int y = 0; y < Height; y++)
-                {
-                    //to know more about CoordinateSystemConverter, see above (file start, before using's)
-                    int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
-                    cells[i] = new Cell(new Point(x, y), rand.NextDouble() < 0.4, this);
-                }
+            int i = CoordinateSystemConverter.PlaneToLine(position, Width);
+
+            if (IsInBounds(i))
+                cells[i].ReverseLife();
         }
 
         public virtual void Update()
@@ -103,43 +100,44 @@ namespace LifeGame
             RaiseUpdateFinishedEvent();
         }
 
+        public virtual void Render(Graphics graphics)
+        {
+            foreach (Cell cell in cells)
+                cell.Render(graphics);
+        }
+
         private void CreateGridCopy()
         {
             cells.CopyTo(copy, 0);
         }
-        
+
         private void DetermineNextStateForCells()
         {
-            DetermineNextLifeState();
-            DetermineNextColorState();
-        }
-
-        private void DetermineNextLifeState()
-        {
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
                     int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
-
-                    int[] neighbours = GetNeightboursIndexes(i);
-                    Cell[] neighboursCells = GetAliveCells(neighbours);
-                    int aliveNeighbours = neighboursCells.Length;
-
-                    DetermineCellLifeState(i, aliveNeighbours);
+                    DetermineNextLifeState(i);
+                    DetermineNextColorState(i);
                 }
         }
 
-        private void DetermineNextColorState()
+        private void DetermineNextLifeState(int i)
         {
-            for (int x = 0; x < Width; x++)
-                for (int y = 0; y < Height; y++)
-                {
-                    int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
-                    Cell[] neighbours = GetAliveCells(GetNeightboursIndexes(i));
-                    
-                    if (useMeanColor)
-                        DetermineCellMeanColor(i, neighbours);
-                }
+            int[] neighbours = GetNeightboursIndexes(i);
+            Cell[] neighboursCells = GetAliveCells(neighbours);
+            int aliveNeighbours = neighboursCells.Length;
+
+            DetermineCellLifeState(i, aliveNeighbours);
+        }
+
+        private void DetermineNextColorState(int i)
+        {
+            if (useMeanColor)
+            {
+                Cell[] neighbours = GetAliveCells(GetNeightboursIndexes(i));
+                DetermineCellMeanColor(i, neighbours);
+            }
         }
 
         private void DetermineCellLifeState(int i, int aliveNeighbours)
@@ -191,10 +189,15 @@ namespace LifeGame
             List<Cell> alive = new List<Cell>();
 
             foreach (int index in neighbours)
-                if (index > -1 && index < copy.Length)
+                if (IsInBounds(index))
                 if (copy[index].Alive)
                     alive.Add(copy[index]);
             return alive.ToArray();
+        }
+
+        private bool IsInBounds(int i)
+        {
+            return i > -1 && i < copy.Length;
         }
 
         protected void RaiseUpdateFinishedEvent()
@@ -203,10 +206,27 @@ namespace LifeGame
                 UpdateFinished(this, EventArgs.Empty);
         }
 
-        public virtual void Render(Graphics graphics)
+        private void CreateCells()
         {
-            foreach (Cell cell in cells)
-                cell.Render(graphics);
+            CreateEmptyGrids();
+            FillGrid();
+        }
+
+        private void CreateEmptyGrids()
+        {
+            cells = new Cell[Width * Height];
+            copy = new Cell[Width * Height];
+        }
+
+        private void FillGrid()
+        {
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                {
+                    //to know more about CoordinateSystemConverter, see above (file start, before using's)
+                    int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
+                    cells[i] = new Cell(new Point(x, y), rand.NextDouble() < 0.4, this);
+                }
         }
     }
 }

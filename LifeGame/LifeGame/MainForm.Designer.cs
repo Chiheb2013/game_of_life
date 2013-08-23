@@ -47,12 +47,18 @@
             this.gb_SaveOptions = new System.Windows.Forms.GroupBox();
             this.bt_LoadFrom = new System.Windows.Forms.Button();
             this.bt_SaveTo = new System.Windows.Forms.Button();
+            this.gb_GridState = new System.Windows.Forms.GroupBox();
+            this.nud_CellSize = new System.Windows.Forms.NumericUpDown();
+            this.bt_Hecatomb = new System.Windows.Forms.Button();
+            this.chk_ShowGridLimits = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridWidth)).BeginInit();
             this.panel2.SuspendLayout();
             this.gb_SaveOptions.SuspendLayout();
+            this.gb_GridState.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CellSize)).BeginInit();
             this.SuspendLayout();
             // 
             // pb_Ozone
@@ -61,14 +67,19 @@
             this.pb_Ozone.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pb_Ozone.Location = new System.Drawing.Point(3, 3);
             this.pb_Ozone.Name = "pb_Ozone";
-            this.pb_Ozone.Size = new System.Drawing.Size(565, 375);
-            this.pb_Ozone.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pb_Ozone.Size = new System.Drawing.Size(724, 375);
             this.pb_Ozone.TabIndex = 0;
             this.pb_Ozone.TabStop = false;
+            this.pb_Ozone.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pb_Ozone_MouseClick);
+            this.pb_Ozone.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_Ozone_MouseDown);
+            this.pb_Ozone.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pb_Ozone_MouseMove);
+            this.pb_Ozone.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pb_Ozone_MouseUp);
             // 
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.chk_ShowGridLimits);
+            this.panel1.Controls.Add(this.nud_CellSize);
             this.panel1.Controls.Add(this.chk_UseMeanColor);
             this.panel1.Controls.Add(this.chk_UseHexagonalGrid);
             this.panel1.Controls.Add(this.lbl_CurrentIteration);
@@ -76,19 +87,17 @@
             this.panel1.Controls.Add(this.nud_GridHeight);
             this.panel1.Controls.Add(this.nud_GridWidth);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.bt_NewGrid);
-            this.panel1.Controls.Add(this.bt_StartStop);
             this.panel1.Controls.Add(this.lbl_NumberOfLivingCells);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Location = new System.Drawing.Point(15, 416);
+            this.panel1.Location = new System.Drawing.Point(12, 431);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(376, 79);
+            this.panel1.Size = new System.Drawing.Size(376, 70);
             this.panel1.TabIndex = 1;
             // 
             // chk_UseMeanColor
             // 
             this.chk_UseMeanColor.AutoSize = true;
-            this.chk_UseMeanColor.Location = new System.Drawing.Point(115, 52);
+            this.chk_UseMeanColor.Location = new System.Drawing.Point(115, 48);
             this.chk_UseMeanColor.Name = "chk_UseMeanColor";
             this.chk_UseMeanColor.Size = new System.Drawing.Size(100, 17);
             this.chk_UseMeanColor.TabIndex = 12;
@@ -99,7 +108,7 @@
             // chk_UseHexagonalGrid
             // 
             this.chk_UseHexagonalGrid.AutoSize = true;
-            this.chk_UseHexagonalGrid.Location = new System.Drawing.Point(6, 52);
+            this.chk_UseHexagonalGrid.Location = new System.Drawing.Point(6, 48);
             this.chk_UseHexagonalGrid.Name = "chk_UseHexagonalGrid";
             this.chk_UseHexagonalGrid.Size = new System.Drawing.Size(103, 17);
             this.chk_UseHexagonalGrid.TabIndex = 11;
@@ -130,7 +139,7 @@
             0,
             0,
             0});
-            this.nud_GridHeight.Location = new System.Drawing.Point(108, 26);
+            this.nud_GridHeight.Location = new System.Drawing.Point(108, 22);
             this.nud_GridHeight.Maximum = new decimal(new int[] {
             248,
             0,
@@ -157,7 +166,7 @@
             0,
             0,
             0});
-            this.nud_GridWidth.Location = new System.Drawing.Point(60, 26);
+            this.nud_GridWidth.Location = new System.Drawing.Point(60, 22);
             this.nud_GridWidth.Maximum = new decimal(new int[] {
             248,
             0,
@@ -180,7 +189,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 28);
+            this.label1.Location = new System.Drawing.Point(3, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 13);
             this.label1.TabIndex = 6;
@@ -188,9 +197,9 @@
             // 
             // bt_NewGrid
             // 
-            this.bt_NewGrid.Location = new System.Drawing.Point(296, 42);
+            this.bt_NewGrid.Location = new System.Drawing.Point(6, 45);
             this.bt_NewGrid.Name = "bt_NewGrid";
-            this.bt_NewGrid.Size = new System.Drawing.Size(75, 23);
+            this.bt_NewGrid.Size = new System.Drawing.Size(92, 23);
             this.bt_NewGrid.TabIndex = 5;
             this.bt_NewGrid.Text = "New";
             this.bt_NewGrid.UseVisualStyleBackColor = true;
@@ -198,9 +207,9 @@
             // 
             // bt_StartStop
             // 
-            this.bt_StartStop.Location = new System.Drawing.Point(296, 18);
+            this.bt_StartStop.Location = new System.Drawing.Point(6, 19);
             this.bt_StartStop.Name = "bt_StartStop";
-            this.bt_StartStop.Size = new System.Drawing.Size(75, 23);
+            this.bt_StartStop.Size = new System.Drawing.Size(90, 23);
             this.bt_StartStop.TabIndex = 4;
             this.bt_StartStop.Text = "Start";
             this.bt_StartStop.UseVisualStyleBackColor = true;
@@ -230,13 +239,13 @@
             this.panel2.Controls.Add(this.pb_Ozone);
             this.panel2.Location = new System.Drawing.Point(12, 12);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(588, 398);
+            this.panel2.Size = new System.Drawing.Size(747, 398);
             this.panel2.TabIndex = 2;
             // 
             // vsc_VerticalScroller
             // 
             this.vsc_VerticalScroller.Dock = System.Windows.Forms.DockStyle.Right;
-            this.vsc_VerticalScroller.Location = new System.Drawing.Point(571, 0);
+            this.vsc_VerticalScroller.Location = new System.Drawing.Point(730, 0);
             this.vsc_VerticalScroller.Name = "vsc_VerticalScroller";
             this.vsc_VerticalScroller.Size = new System.Drawing.Size(17, 381);
             this.vsc_VerticalScroller.SmallChange = 5;
@@ -248,7 +257,7 @@
             this.hsc_HorizontalScroller.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.hsc_HorizontalScroller.Location = new System.Drawing.Point(0, 381);
             this.hsc_HorizontalScroller.Name = "hsc_HorizontalScroller";
-            this.hsc_HorizontalScroller.Size = new System.Drawing.Size(588, 17);
+            this.hsc_HorizontalScroller.Size = new System.Drawing.Size(747, 17);
             this.hsc_HorizontalScroller.SmallChange = 5;
             this.hsc_HorizontalScroller.TabIndex = 1;
             this.hsc_HorizontalScroller.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hsc_HorizontalScroller_Scroll);
@@ -257,7 +266,7 @@
             // 
             this.gb_SaveOptions.Controls.Add(this.bt_LoadFrom);
             this.gb_SaveOptions.Controls.Add(this.bt_SaveTo);
-            this.gb_SaveOptions.Location = new System.Drawing.Point(400, 416);
+            this.gb_SaveOptions.Location = new System.Drawing.Point(12, 507);
             this.gb_SaveOptions.Name = "gb_SaveOptions";
             this.gb_SaveOptions.Size = new System.Drawing.Size(200, 51);
             this.gb_SaveOptions.TabIndex = 3;
@@ -284,11 +293,67 @@
             this.bt_SaveTo.UseVisualStyleBackColor = true;
             this.bt_SaveTo.Click += new System.EventHandler(this.bt_SaveTo_Click);
             // 
+            // gb_GridState
+            // 
+            this.gb_GridState.Controls.Add(this.bt_Hecatomb);
+            this.gb_GridState.Controls.Add(this.bt_StartStop);
+            this.gb_GridState.Controls.Add(this.bt_NewGrid);
+            this.gb_GridState.Location = new System.Drawing.Point(394, 431);
+            this.gb_GridState.Name = "gb_GridState";
+            this.gb_GridState.Size = new System.Drawing.Size(200, 70);
+            this.gb_GridState.TabIndex = 4;
+            this.gb_GridState.TabStop = false;
+            this.gb_GridState.Text = "Grid state";
+            // 
+            // nud_CellSize
+            // 
+            this.nud_CellSize.Location = new System.Drawing.Point(159, 22);
+            this.nud_CellSize.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.nud_CellSize.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.nud_CellSize.Name = "nud_CellSize";
+            this.nud_CellSize.Size = new System.Drawing.Size(45, 20);
+            this.nud_CellSize.TabIndex = 13;
+            this.nud_CellSize.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.nud_CellSize.ValueChanged += new System.EventHandler(this.nud_CellSize_ValueChanged);
+            // 
+            // bt_Hecatomb
+            // 
+            this.bt_Hecatomb.Location = new System.Drawing.Point(102, 20);
+            this.bt_Hecatomb.Name = "bt_Hecatomb";
+            this.bt_Hecatomb.Size = new System.Drawing.Size(92, 23);
+            this.bt_Hecatomb.TabIndex = 6;
+            this.bt_Hecatomb.Text = "Hecatomb";
+            this.bt_Hecatomb.UseVisualStyleBackColor = true;
+            this.bt_Hecatomb.Click += new System.EventHandler(this.bt_Hecatomb_Click);
+            // 
+            // chk_ShowGridLimits
+            // 
+            this.chk_ShowGridLimits.AutoSize = true;
+            this.chk_ShowGridLimits.Location = new System.Drawing.Point(221, 48);
+            this.chk_ShowGridLimits.Name = "chk_ShowGridLimits";
+            this.chk_ShowGridLimits.Size = new System.Drawing.Size(98, 17);
+            this.chk_ShowGridLimits.TabIndex = 14;
+            this.chk_ShowGridLimits.Text = "Show grid limits";
+            this.chk_ShowGridLimits.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 507);
+            this.ClientSize = new System.Drawing.Size(771, 566);
+            this.Controls.Add(this.gb_GridState);
             this.Controls.Add(this.gb_SaveOptions);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -302,8 +367,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nud_GridWidth)).EndInit();
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.gb_SaveOptions.ResumeLayout(false);
+            this.gb_GridState.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.nud_CellSize)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -329,6 +395,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox chk_UseHexagonalGrid;
         private System.Windows.Forms.CheckBox chk_UseMeanColor;
+        private System.Windows.Forms.NumericUpDown nud_CellSize;
+        private System.Windows.Forms.GroupBox gb_GridState;
+        private System.Windows.Forms.Button bt_Hecatomb;
+        private System.Windows.Forms.CheckBox chk_ShowGridLimits;
     }
 }
 
