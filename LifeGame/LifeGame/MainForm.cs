@@ -177,7 +177,21 @@ namespace LifeGame
             {
                 grid.Update();
                 Render();
+
+                DetermineTimeToWaitForSpeed();
             }
+        }
+
+        private void DetermineTimeToWaitForSpeed()
+        {
+            this.Invoke(new Action(() =>
+                {
+                    if (cmb_Speed.Text == "Medium speed")
+                        Thread.Sleep(200);
+                    if (cmb_Speed.Text == "Slow speed")
+                        Thread.Sleep(500);
+                }
+            ));
         }
 
         private void grid_UpdateFinished(object sender, EventArgs e)

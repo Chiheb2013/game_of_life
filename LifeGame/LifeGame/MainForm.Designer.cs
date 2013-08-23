@@ -51,6 +51,7 @@
             this.bt_SaveTo = new System.Windows.Forms.Button();
             this.gb_GridState = new System.Windows.Forms.GroupBox();
             this.bt_Hecatomb = new System.Windows.Forms.Button();
+            this.cmb_Speed = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_CellSize)).BeginInit();
@@ -78,6 +79,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.cmb_Speed);
             this.panel1.Controls.Add(this.chk_ShowGridLimits);
             this.panel1.Controls.Add(this.nud_CellSize);
             this.panel1.Controls.Add(this.chk_UseMeanColor);
@@ -348,6 +350,19 @@
             this.bt_Hecatomb.UseVisualStyleBackColor = true;
             this.bt_Hecatomb.Click += new System.EventHandler(this.bt_Hecatomb_Click);
             // 
+            // cmb_Speed
+            // 
+            this.cmb_Speed.FormattingEnabled = true;
+            this.cmb_Speed.Items.AddRange(new object[] {
+            "Slow speed",
+            "Medium speed",
+            "Max speed"});
+            this.cmb_Speed.Location = new System.Drawing.Point(210, 21);
+            this.cmb_Speed.Name = "cmb_Speed";
+            this.cmb_Speed.Size = new System.Drawing.Size(121, 21);
+            this.cmb_Speed.TabIndex = 15;
+            this.cmb_Speed.Text = "Max speed";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -399,6 +414,7 @@
         private System.Windows.Forms.GroupBox gb_GridState;
         private System.Windows.Forms.Button bt_Hecatomb;
         private System.Windows.Forms.CheckBox chk_ShowGridLimits;
+        private System.Windows.Forms.ComboBox cmb_Speed;
     }
 }
 
