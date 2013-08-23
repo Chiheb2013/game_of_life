@@ -95,7 +95,6 @@ namespace LifeGame
         {
             iteration++;
 
-            CreateGridCopy();
             DetermineNextStateForCells();
             RaiseUpdateFinishedEvent();
         }
@@ -106,13 +105,9 @@ namespace LifeGame
                 cell.Render(graphics);
         }
 
-        private void CreateGridCopy()
-        {
-            cells.CopyTo(copy, 0);
-        }
-
         private void DetermineNextStateForCells()
         {
+            CreateGridCopy();
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
                 {
@@ -122,28 +117,36 @@ namespace LifeGame
                 }
         }
 
+        private void CreateGridCopy()
+        {
+            List<Cell> cop = new List<Cell>();
+            foreach (Cell cell in cells)
+                cop.Add(new Cell(cell));
+            copy = cop.ToArray();
+        }
+
         private void DetermineNextLifeState(int i)
         {
-            int[] neighbours = GetNeightboursIndexes(i);
-            Cell[] neighboursCells = GetAliveCells(neighbours);
-            int aliveNeighbours = neighboursCells.Length;
+            int[] neighbourdHoodIndice = GetNeighboursIndice(i);
+            Cell[] neighbourHoodCells = GetAliveCells(neighbourdHoodIndice);
+            int aliveNeighbours = neighbourHoodCells.Length;
 
             DetermineCellLifeState(i, aliveNeighbours);
+        }
+
+        private void DetermineCellLifeState(int i, int aliveNeighbours)
+        {
+            if (aliveNeighbours == 3) cells[i].Live();
+            else if (aliveNeighbours <= 1 || aliveNeighbours >= 4) cells[i].Kill();
         }
 
         private void DetermineNextColorState(int i)
         {
             if (useMeanColor)
             {
-                Cell[] neighbours = GetAliveCells(GetNeightboursIndexes(i));
+                Cell[] neighbours = GetAliveCells(GetNeighboursIndice(i));
                 DetermineCellMeanColor(i, neighbours);
             }
-        }
-
-        private void DetermineCellLifeState(int i, int aliveNeighbours)
-        {
-            if (aliveNeighbours == 3) cells[i].Live();
-            else if (aliveNeighbours < 2 || aliveNeighbours >= 4) cells[i].Kill();
         }
 
         private void DetermineCellMeanColor(int i, Cell[] neighbours)
@@ -152,7 +155,7 @@ namespace LifeGame
                 cells[i].Color = Cell.GetMeanColor(neighbours);
         }
 
-        private int[] GetNeightboursIndexes(int i)
+        private int[] GetNeighboursIndice(int i)
         {
             List<int> neightbours = new List<int>();
 
@@ -166,9 +169,9 @@ namespace LifeGame
             int left = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy), Width);
             int right = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy), Width);
 
-            int bottomLeft = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy + 1), Width);
+            int bottomLeft = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx - 1, cy + 1 < Height ? cy + 1 : -1), Width);
             int bottom = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx, cy + 1), Width);
-            int bottomRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy + 1), Width);
+            int bottomRight = CoordinateSystemConverter.PlaneToLine(new Vector2D(cx + 1, cy + 1 < Height ? cy + 1 : -1), Width);
 
             neightbours.Add(upLeft);
             neightbours.Add(up);

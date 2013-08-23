@@ -46,6 +46,17 @@ namespace LifeGame
             DetermineColorFromLifeState();
         }
 
+        public Cell(Cell cell)
+        {
+            this.parent = cell.parent;
+
+            this.alive = cell.alive;
+            this.position = cell.position;
+
+            this.color = cell.color;
+            this.aliveColor = cell.aliveColor;
+        }
+
         public Cell(Point position, bool alive, Grid parent = null)
         {
             this.parent = parent;
