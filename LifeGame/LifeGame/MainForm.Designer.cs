@@ -30,6 +30,7 @@
         {
             this.pb_Ozone = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cmb_Speed = new System.Windows.Forms.ComboBox();
             this.chk_ShowGridLimits = new System.Windows.Forms.CheckBox();
             this.nud_CellSize = new System.Windows.Forms.NumericUpDown();
             this.chk_UseMeanColor = new System.Windows.Forms.CheckBox();
@@ -51,7 +52,6 @@
             this.bt_SaveTo = new System.Windows.Forms.Button();
             this.gb_GridState = new System.Windows.Forms.GroupBox();
             this.bt_Hecatomb = new System.Windows.Forms.Button();
-            this.cmb_Speed = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Ozone)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nud_CellSize)).BeginInit();
@@ -95,6 +95,19 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(376, 70);
             this.panel1.TabIndex = 1;
+            // 
+            // cmb_Speed
+            // 
+            this.cmb_Speed.FormattingEnabled = true;
+            this.cmb_Speed.Items.AddRange(new object[] {
+            "Slow speed",
+            "Medium speed",
+            "Max speed"});
+            this.cmb_Speed.Location = new System.Drawing.Point(210, 21);
+            this.cmb_Speed.Name = "cmb_Speed";
+            this.cmb_Speed.Size = new System.Drawing.Size(121, 21);
+            this.cmb_Speed.TabIndex = 15;
+            this.cmb_Speed.Text = "Max speed";
             // 
             // chk_ShowGridLimits
             // 
@@ -283,7 +296,7 @@
             this.vsc_VerticalScroller.Location = new System.Drawing.Point(730, 0);
             this.vsc_VerticalScroller.Name = "vsc_VerticalScroller";
             this.vsc_VerticalScroller.Size = new System.Drawing.Size(17, 381);
-            this.vsc_VerticalScroller.SmallChange = 5;
+            this.vsc_VerticalScroller.SmallChange = 10;
             this.vsc_VerticalScroller.TabIndex = 2;
             this.vsc_VerticalScroller.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vsc_VerticalScroller_Scroll);
             // 
@@ -293,7 +306,7 @@
             this.hsc_HorizontalScroller.Location = new System.Drawing.Point(0, 381);
             this.hsc_HorizontalScroller.Name = "hsc_HorizontalScroller";
             this.hsc_HorizontalScroller.Size = new System.Drawing.Size(747, 17);
-            this.hsc_HorizontalScroller.SmallChange = 5;
+            this.hsc_HorizontalScroller.SmallChange = 10;
             this.hsc_HorizontalScroller.TabIndex = 1;
             this.hsc_HorizontalScroller.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hsc_HorizontalScroller_Scroll);
             // 
@@ -349,19 +362,6 @@
             this.bt_Hecatomb.Text = "Hecatomb";
             this.bt_Hecatomb.UseVisualStyleBackColor = true;
             this.bt_Hecatomb.Click += new System.EventHandler(this.bt_Hecatomb_Click);
-            // 
-            // cmb_Speed
-            // 
-            this.cmb_Speed.FormattingEnabled = true;
-            this.cmb_Speed.Items.AddRange(new object[] {
-            "Slow speed",
-            "Medium speed",
-            "Max speed"});
-            this.cmb_Speed.Location = new System.Drawing.Point(210, 21);
-            this.cmb_Speed.Name = "cmb_Speed";
-            this.cmb_Speed.Size = new System.Drawing.Size(121, 21);
-            this.cmb_Speed.TabIndex = 15;
-            this.cmb_Speed.Text = "Max speed";
             // 
             // MainForm
             // 
