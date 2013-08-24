@@ -149,12 +149,15 @@ namespace LifeGame
 
         private void glf_LoadingFinished(object sender, EventArgs e)
         {
-            grid = ((GridEventArgs)e).Grid;
+            GridEventArgs gea = (GridEventArgs)e;
+            grid = gea.Grid;
 
             InitializeLifeGame(hasGrid: true);
 
             nud_GridWidth.Value = (decimal)grid.Width;
             nud_GridHeight.Value = (decimal)grid.Height;
+
+            chk_UseHexagonalGrid.Checked = grid is HexagonalGrid;
 
             RefreshUI();
             DrawGrid();
@@ -208,14 +211,20 @@ namespace LifeGame
 
         private void DetermineTimeToWaitForSpeed()
         {
+            bool slow = false;
+            bool medium = false;
+
             this.Invoke(new Action(() =>
                 {
                     if (cmb_Speed.Text == "Medium speed")
-                        Thread.Sleep(200);
+                        medium = true;
                     if (cmb_Speed.Text == "Slow speed")
-                        Thread.Sleep(500);
+                        slow = true;
                 }
             ));
+
+            if (slow) Thread.Sleep(500);
+            if (medium) Thread.Sleep(200);
         }
 
         private void grid_UpdateFinished(object sender, EventArgs e)

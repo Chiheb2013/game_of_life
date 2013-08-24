@@ -20,28 +20,60 @@ namespace LifeGame
                 using (FileStream fs = File.Create(to))
                 {
                     StringBuilder bits = new StringBuilder();
-
-                    WriteGridProperties(grid, fs);
-
-                    bits.Append(grid.Cells[0].Alive ? '1' : '0');
-                    for (int i = 1; i < grid.Cells.Length; i++)
-                    {
-                        bits.Append(grid.Cells[i].Alive ? '1' : '0');
-
-                        if (i % sizeof(long) == 0)
-                        {
-                            string binary = bits.ToString().Reverse();
-                            byte octopus = Convert.ToByte(binary, 2);
-                            fs.WriteByte(octopus);
-
-                            bits.Clear();
-                        }
-                    }
+                    
+                    if (grid is HexagonalGrid)
+                        SaveHexagonalGrid(grid, fs, bits);
+                    else
+                        SaveRegularGrid(grid, fs, bits);
                 }
             }
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        private void SaveRegularGrid(Grid grid, FileStream fs, StringBuilder bits)
+        {
+            fs.WriteByte(0);
+            WriteGridProperties(grid, fs);
+
+            bits.Append(grid.Cells[0].Alive ? '1' : '0');
+            for (int i = 1; i < grid.Cells.Length; i++)
+            {
+                bits.Append(grid.Cells[i].Alive ? '1' : '0');
+
+                if (i % sizeof(long) == 0)
+                {
+                    string binary = bits.ToString().Reverse();
+                    byte octopus = Convert.ToByte(binary, 2);
+                    fs.WriteByte(octopus);
+
+                    bits.Clear();
+                }
+            }
+        }
+
+        private void SaveHexagonalGrid(Grid grid, FileStream fs, StringBuilder bits)
+        {
+            fs.WriteByte(1);
+            HexagonalGrid hexa = (HexagonalGrid)grid;
+
+            WriteGridProperties(hexa, fs);
+
+            bits.Append(hexa.Cells[0].Alive ? '1' : '0');
+            for (int i = 1; i < hexa.Cells.Length; i++)
+            {
+                bits.Append(hexa.Cells[i].Alive ? '1' : '0');
+
+                if (i % sizeof(long) == 0)
+                {
+                    string binary = bits.ToString().Reverse();
+                    byte octopus = Convert.ToByte(binary, 2);
+                    fs.WriteByte(octopus);
+
+                    bits.Clear();
+                }
             }
         }
 
@@ -80,25 +112,53 @@ namespace LifeGame
             {
                 using (FileStream fs = File.OpenRead(from))
                 {
-                    int width = fs.ReadByte();
-                    int height = fs.ReadByte();
-                    int sequenceLength = width * height / sizeof(long);
-                    int gridArea = width * height;
-                    int iteration = ReadGridIteration(fs);
+                    int gridType = fs.ReadByte();
 
-                    List<int> cellsLifeStates = GetCellsLifeState(fs, sequenceLength);
-                    List<Cell> cells = CreateCells(width, gridArea, cellsLifeStates);
-
-                    Grid grid = new Grid(new Point(width, height), cells.ToArray(), iteration);
-                    SetCellsParent(grid);
-
-                    return grid;
+                    if (gridType == 0)
+                        return LoadRegularGrid(fs);
+                    else
+                        return LoadHexagonalGrid(fs);
                 }
             }
             catch (Exception e)
             {
                 throw e;
             }
+        }
+
+        private Grid LoadRegularGrid(FileStream fs)
+        {
+            int width = fs.ReadByte();
+            int height = fs.ReadByte();
+            int sequenceLength = width * height / sizeof(long);
+            int gridArea = width * height;
+            int iteration = ReadGridIteration(fs);
+
+            List<int> cellsLifeStates = GetCellsLifeState(fs, sequenceLength);
+            List<Cell> cells = CreateCells(width, gridArea, cellsLifeStates);
+
+            Grid grid = new Grid(new Point(width, height), cells.ToArray(), iteration);
+            SetCellsParent(grid);
+
+            return grid;
+        }
+
+        private HexagonalGrid LoadHexagonalGrid(FileStream fs)
+        {
+            int width = fs.ReadByte();
+            int height = fs.ReadByte();
+            int gridArea = width * height;
+            int iteration = ReadGridIteration(fs);
+
+            int sequenceLength = width * height / sizeof(long);
+
+            List<int> cellsLifeStates = GetCellsLifeState(fs, sequenceLength);
+            List<HexagonalCell> cells = CreateHexagonalCells(width, gridArea, cellsLifeStates);
+
+            HexagonalGrid hexa = new HexagonalGrid(new Vector2D(width, height), cells.ToArray(), iteration);
+            SetCellsParent(hexa);
+
+            return hexa;
         }
 
         private static void SetCellsParent(Grid grid)
@@ -142,10 +202,28 @@ namespace LifeGame
                 Vector2D v = CoordinateSystemConverter.LineToPlane(i, width);
                 acells.Add(new Cell(new Point((int)v.X, (int)v.Y), cells[i] == 1));
 
-                double percent = (double)i / (double)gridArea * 100.0;
-                RaiseCellsIterationEvent((int)percent + 1);
+                RaiseIterationEvent(gridArea, i);
             }
             return acells;
+        }
+
+        private List<HexagonalCell> CreateHexagonalCells(int width, int gridArea, List<int> states)
+        {
+            List<HexagonalCell> cells = new List<HexagonalCell>();
+            for (int i = 0; i < gridArea; i++)
+            {
+                Vector2D v = CoordinateSystemConverter.LineToPlane(i, width);
+                cells.Add(new HexagonalCell(new Vector2D(v.X, v.Y), new Vector2D(10, 20), states[i] == 1));
+
+                RaiseIterationEvent(gridArea, i);
+            }
+            return cells;
+        }
+
+        private void RaiseIterationEvent(int gridArea, int i)
+        {
+            double percent = (double)i / (double)gridArea * 100.0;
+            RaiseCellsIterationEvent((int)percent + 1);
         }
 
         private void RaiseBitsIterationEvent(int percent)

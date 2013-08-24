@@ -24,7 +24,7 @@ namespace LifeGame
         Cell[] copy;
         Cell[] cells;
 
-        Point size;
+        protected Point size;
 
         public int Width { get { return size.X; } }
         public int Height { get { return size.Y; } }
@@ -42,8 +42,6 @@ namespace LifeGame
 
         public Grid()
         {
-            this.size = new Point(10, 10);
-
             CreateCells();
         }
 

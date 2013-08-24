@@ -12,13 +12,8 @@ namespace LifeGame
 {
     class HexagonalGrid : Grid
     {
-        Vector2D size;
-
         HexagonalCell[] copy;
         HexagonalCell[] cells;
-
-        public new int Width { get { return (int)size.X; } }
-        public new int Height { get { return (int)size.Y; } }
 
         public new int LivingCells
         {
@@ -28,23 +23,23 @@ namespace LifeGame
             }
         }
 
-        public new HexagonalCell[] Cells { get { return cells; } }
+        public new Cell[] Cells { get { return cells; } }
 
         public HexagonalGrid()
         {
-            this.size = new Vector2D(8, 8);
             CreateCells();
         }
 
         public HexagonalGrid(Vector2D size)
         {
-            this.size = size;
+            this.size = new Point((int)size.X, (int)size.Y);
             CreateCells();
         }
 
         public HexagonalGrid(Vector2D size, HexagonalCell[] cells, int iteration)
         {
-            this.size = size;
+            this.size = new Point((int)size.X, (int)size.Y);
+
             this.cells = cells;
             this.iteration = iteration;
 
