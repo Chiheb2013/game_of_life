@@ -51,6 +51,18 @@ namespace LifeGame
             this.copy = new HexagonalCell[Width * Height];
         }
 
+        public override void Live()
+        {
+            foreach (HexagonalCell cell in cells)
+                cell.Live();
+        }
+
+        public override void Kill()
+        {
+            foreach (HexagonalCell cell in cells)
+                cell.Kill();
+        }
+
         private void CreateCells()
         {
             CreateEmptyGrids();
@@ -150,7 +162,7 @@ namespace LifeGame
         {
             for (int x = 0; x < Width; x++)
             {
-                int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x * HexagonalCell.RADIUS, -HexagonalCell.DIAMETER), Width);
+                int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, row), Width);
 
                 if (x % 2 != 0)
                 {

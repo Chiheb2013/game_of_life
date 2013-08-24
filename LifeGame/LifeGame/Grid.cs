@@ -71,13 +71,13 @@ namespace LifeGame
             this.copy = new Cell[size.X * size.Y];
         }
 
-        public void Live()
+        public virtual void Live()
         {
             foreach (Cell cell in cells)
                 cell.Live();
         }
 
-        public void Kill()
+        public virtual void Kill()
         {
             foreach (Cell cell in cells)
                 cell.Kill();

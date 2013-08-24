@@ -10,41 +10,55 @@ namespace LifeGame
 {
     public partial class MainForm : Form
     {
-        bool working;
-        bool mouseDown;
+        bool working;       //tells to the update thread if it has
+                            //to compute the next generation of cells
+        
+        bool mouseDown;     //used to know if the mouse is pressed
+                            //to draw cells
 
-        Grid grid;
-        Vector2D lastDrawnPosition;
+        Vector2D lastDrawnPosition; //the last position where a cell was drawn
+                                    //using this allows not to draw twice on the same cell
 
-        Bitmap bmp;
-        Graphics graphics;
-        Rectangle view;
+        Grid grid;          //the grid of cells
 
-        Thread updateThread;
+        Bitmap bmp;         //bitmap buffer where to draw the cells
+        Graphics graphics;  //the renderer
+        Rectangle view;     //the view that can be seen on the screen
+
+        Thread updateThread;    //the worker thread. it computes the generations of cells
 
         public MainForm()
         {
             InitializeComponent();
 
-            InitializeLifeGame(hasBitmap:false);
+            InitializeLifeGame(hasBitmap:false);    //initializes a new game of life grid
+                                                    //and creates a new bitmap (initializes 'bmp' and 'graphics' too)
         }
 
+        /// <summary>
+        /// Creates a new game of life grid with the specified parameters on the UI
+        /// </summary>
+        /// <param name="sender">The new grid button</param>
+        /// <param name="e">None</param>
         private void bt_NewGrid_Click(object sender, EventArgs e)
         {
             bt_StartStop.Text = "Start";
             graphics.Clear(Color.White);
 
-            CloseUpdateThread();
-            InitializeLifeGame();
+            CloseUpdateThread();        //Each time a new grid is created
+                                        //create a new worker thread
 
-            Render();
+            InitializeLifeGame();       //Initialize a new game of life grid
+
+            Render();                   //Render the new grid on the screen
         }
 
         private void InitializeLifeGame(bool hasBitmap = true, bool hasGrid = false)
         {
             working = false;
+
             mouseDown = false;
-            lastDrawnPosition = Vector2D.Zero;  //TODO : note to self, in Vector2D, ctr(){this=Vector2D.Zero}
+            lastDrawnPosition = Vector2D.Zero;
             view = new Rectangle(0, 0, pb_Ozone.Width, pb_Ozone.Height);
 
             if (!hasGrid)
@@ -76,8 +90,17 @@ namespace LifeGame
 
         private void SetScrollBarsMaximums()
         {
-            int width = grid.Width * Cell.CELL_SIZE;
-            int height = grid.Height * Cell.CELL_SIZE;
+            int width, height;
+            if (!chk_UseHexagonalGrid.Checked)
+            {
+                width = grid.Width * Cell.CELL_SIZE;
+                height = grid.Height * Cell.CELL_SIZE;
+            }
+            else
+            {
+                width = grid.Width * HexagonalCell.DIAMETER;
+                height = grid.Height * HexagonalCell.DIAMETER;
+            }
 
             hsc_HorizontalScroller.Maximum = width;
             vsc_VerticalScroller.Maximum = height;
@@ -105,9 +128,9 @@ namespace LifeGame
 
         private void bt_LoadFrom_Click(object sender, EventArgs e)
         {
+            GridLoadingForm glf = new GridLoadingForm();
             try
             {
-                GridLoadingForm glf = new GridLoadingForm();
                 glf.LoadingFinished += glf_LoadingFinished;
                 glf.ShowDialog();
             }
@@ -115,6 +138,7 @@ namespace LifeGame
             {
                 MessageBox.Show("The file was not found.", "LifeGame", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+                glf.Close();
             }
             catch (Exception x)
             {
@@ -220,7 +244,7 @@ namespace LifeGame
             if (!chk_ShowGridLimits.Checked)
                 pb_Ozone.Refresh();
         }
-        //TODO : investigate rules
+
         private void DrawGridLimits()
         {
             Rectangle limits = new Rectangle(0, 0, grid.Width * Cell.CELL_SIZE, grid.Height * Cell.CELL_SIZE);
