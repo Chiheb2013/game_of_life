@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System.Drawing;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
-
-using Mappy;
 
 namespace testDrawPolygon
 {
@@ -16,16 +9,25 @@ namespace testDrawPolygon
     {
         Grid grid;
 
+        Bitmap bmp;
+        Graphics graphics;
+
         public Form1()
         {
             InitializeComponent();
 
-            grid = new Grid(new Point(30, 30));
+            grid = new Grid(new Point(95, 40));
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            bmp = new System.Drawing.Bitmap(Width, Height);
+            graphics = Graphics.FromImage(bmp);
+
+            grid.Render(graphics);
             grid.Render(e.Graphics);
+
+            bmp.Save("hexagons.png", ImageFormat.Png);
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
