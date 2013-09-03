@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define LOG
+
+using System;
 using System.IO;
 using System.Text;
 using System.Drawing;
@@ -13,10 +15,18 @@ namespace LifeGame
         public event Action<int> BitsIterationPassed;
         public event Action<int> CellsIterationPassed;
 
+#if LOG
+        string logPath = string.Empty;
+        StringBuilder logger = new StringBuilder();
+#endif
+
         public void SaveGrid(Grid grid, string to)
         {
             try
             {
+#if LOG
+                logPath = Path.Combine(to.Replace(Path.GetFileName(to), ""), "log.txt");
+#endif
                 using (FileStream fs = File.Create(to))
                 {
                     StringBuilder bits = new StringBuilder();
@@ -25,6 +35,10 @@ namespace LifeGame
                         SaveHexagonalGrid(grid, fs, bits);
                     else
                         SaveRegularGrid(grid, fs, bits);
+
+#if LOG
+                    File.WriteAllText(logPath, logger.ToString());
+#endif
                 }
             }
             catch (Exception e)
@@ -36,6 +50,9 @@ namespace LifeGame
         private void SaveRegularGrid(Grid grid, FileStream fs, StringBuilder bits)
         {
             fs.WriteByte(0);
+#if LOG
+            logger.AppendLine("Grid type : regular = 0");
+#endif
             WriteGridProperties(grid, fs);
 
             bits.Append(grid.Cells[0].Alive ? '1' : '0');
@@ -49,6 +66,10 @@ namespace LifeGame
                     byte octopus = Convert.ToByte(binary, 2);
                     fs.WriteByte(octopus);
 
+#if LOG
+                    logger.AppendLine("Bits { " + binary + " } = " + octopus);
+#endif
+
                     bits.Clear();
                 }
             }
@@ -57,6 +78,9 @@ namespace LifeGame
         private void SaveHexagonalGrid(Grid grid, FileStream fs, StringBuilder bits)
         {
             fs.WriteByte(1);
+#if LOG
+            logger.AppendLine("Grid type : hexagonal = 1");
+#endif
             HexagonalGrid hexa = (HexagonalGrid)grid;
 
             WriteGridProperties(hexa, fs);
@@ -72,6 +96,10 @@ namespace LifeGame
                     byte octopus = Convert.ToByte(binary, 2);
                     fs.WriteByte(octopus);
 
+#if LOG
+                    logger.AppendLine("Bits { " + binary + " } = " + octopus);
+#endif
+
                     bits.Clear();
                 }
             }
@@ -82,6 +110,11 @@ namespace LifeGame
             fs.WriteByte((byte)grid.Width);
             fs.WriteByte((byte)grid.Height);
 
+#if LOG
+            logger.AppendLine("Width = " + grid.Width);
+            logger.AppendLine("Height = " + grid.Height);
+#endif
+
             WriteGridIteration(grid.Iteration, fs);
         }
 
@@ -90,6 +123,14 @@ namespace LifeGame
             StringBuilder lengthBinary = new StringBuilder((Convert.ToString(iteration, 2).AdjustNumberOfBitsToN()));
 
             string[] parts = CutStringBuilderInFour(ref lengthBinary);
+
+#if LOG
+            logger.AppendLine("Iteration { " + lengthBinary.ToString() + " } = " + iteration);
+            logger.AppendLine("Parts {");
+            foreach (string part in parts)
+                logger.AppendLine("\t{ " + part + " }");
+            logger.AppendLine("}");
+#endif
 
             fs.WriteByte(Convert.ToByte(parts[0], 2));
             fs.WriteByte(Convert.ToByte(parts[1], 2));
