@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 
 using Mappy;
 
@@ -12,6 +9,8 @@ namespace LifeGame
 {
     class HexagonalGrid : Grid
     {
+        static Vector2D CELL_TRANSLATION = new Vector2D(10, 20);
+
         HexagonalCell[] copy;
         HexagonalCell[] cells;
 
@@ -76,9 +75,15 @@ namespace LifeGame
                 for (int y = 0; y < Height; y++)
                 {
                     int i = CoordinateSystemConverter.PlaneToLine(new Vector2D(x, y), Width);
-                    cells[i] = new HexagonalCell(new Vector2D(x, y), new Vector2D(10, 20), 
-                        HexagonalCell.r.NextDouble() < 0.4);
+                    cells[i] = new HexagonalCell(position: new Vector2D(x, y),
+                                                 translation: CELL_TRANSLATION,
+                                                 alive: GetRandomLifeState());
                 }
+        }
+
+        private static bool GetRandomLifeState()
+        {
+            return HexagonalCell.r.NextDouble() < 0.4;
         }
 
         public override void Update()

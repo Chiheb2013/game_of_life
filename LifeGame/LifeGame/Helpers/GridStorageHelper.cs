@@ -1,4 +1,5 @@
 ﻿#define LOG
+#undef LOG
 
 using System;
 using System.IO;
@@ -155,6 +156,11 @@ namespace LifeGame
                 {
                     int gridType = fs.ReadByte();
 
+#if LOG
+                    logger.AppendLine("- Loading :" + Environment.NewLine +
+                        "grid type : " + gridType);
+#endif
+
                     if (gridType == 0)
                         return LoadRegularGrid(fs);
                     else
@@ -175,7 +181,20 @@ namespace LifeGame
             int gridArea = width * height;
             int iteration = ReadGridIteration(fs);
 
+#if LOG
+            logger.AppendLine("width : " + width);
+            logger.AppendLine("height : " + height);
+            logger.AppendLine("seq. length = " + sequenceLength);
+            logger.AppendLine("area : " + gridArea);
+            logger.AppendLine("iteration : " + iteration);
+#endif
+
             List<int> cellsLifeStates = GetCellsLifeState(fs, sequenceLength);
+
+#if LOG
+            File.WriteAllText("log.txt", logger.ToString());
+#endif
+
             List<Cell> cells = CreateCells(width, gridArea, cellsLifeStates);
 
             Grid grid = new Grid(new Point(width, height), cells.ToArray(), iteration);
@@ -190,10 +209,22 @@ namespace LifeGame
             int height = fs.ReadByte();
             int gridArea = width * height;
             int iteration = ReadGridIteration(fs);
-
             int sequenceLength = width * height / sizeof(long);
 
+#if LOG
+            logger.AppendLine("width : " + width);
+            logger.AppendLine("height : " + height);
+            logger.AppendLine("seq. length = " + sequenceLength);
+            logger.AppendLine("area : " + gridArea);
+            logger.AppendLine("iteration : " + iteration);
+#endif
+
             List<int> cellsLifeStates = GetCellsLifeState(fs, sequenceLength);
+
+#if LOG
+            File.WriteAllText("log.txt", logger.ToString());
+#endif
+
             List<HexagonalCell> cells = CreateHexagonalCells(width, gridArea, cellsLifeStates);
 
             HexagonalGrid hexa = new HexagonalGrid(new Vector2D(width, height), cells.ToArray(), iteration);
@@ -222,16 +253,38 @@ namespace LifeGame
 
         private List<int> GetCellsLifeState(FileStream fs, int sequenceLength)
         {
+#if LOG
+            logger.AppendLine(" -- Cell life states loading");
+#endif
             List<int> cells = new List<int>();
-            for (int i = 0; i < sequenceLength; i++)
+
+            int i = 0;
+            int percent;
+            byte[] data = new byte[sequenceLength];
+            fs.Read(data, 0, sequenceLength);
+
+            foreach (byte oct in data)
             {
-                string bits = Convert.ToString(fs.ReadByte(), toBase: 2).AdjustNumberOfBitsToN(sizeof(long));
+                string bits = Convert.ToString(oct, toBase: 2).AdjustNumberOfBitsToN(sizeof(long));
                 foreach (char bit in bits)
                     cells.Add(bit == '1' ? 1 : 0);
+                percent = (int)((float)i++ / (float)sequenceLength * 100.0f);
 
-                double percent = (double)i / (double)sequenceLength * 100.0;
-                RaiseBitsIterationEvent((int)percent + 1);
+#if LOG
+                logger.AppendLine("\t{ " + bits + " }\t" + percent + " %");
+#endif
+
+                RaiseBitsIterationEvent(percent + 1);
             }
+
+#if LOG
+            logger.AppendLine("-- Cells summary :");
+            foreach (int cell in cells)
+                logger.Append(cell);
+            logger.AppendLine(Environment.NewLine + "Total cells : " + cells.Count);
+            logger.AppendLine("Cells by sizeof(long) : " + (cells.Count / sizeof(long)).ToString());
+#endif
+
             return cells;
         }
 
